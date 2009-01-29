@@ -339,7 +339,7 @@
 					// If no config file, assume they're going to specify SWF manually thru UI			   		
 					showMonkey();
 					tabs.selectedIndex = 0;
-					targetSwf.errorString = 'No targetSwf specified. Please specify a SWF to run.'
+					targetSwf.errorString = 'No targetSwf specified. Please specify a SWF in the working directory to run.'
 
 			
 //				var config:String = "FlexMonkey.xml";
@@ -472,9 +472,9 @@
 	</mx:ControlBar>
 	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all" selectedIndex="1">
 	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300">
-		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="20"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%">
-			<mx:Label text="Working Directory:"/>
-			<mx:Label text="{MonkeyUtils.getAppPath()}"/>	
+		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="10"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%" borderStyle="solid">
+			<mx:Label text="Test SWF Directory:" paddingLeft="5"/>
+			<mx:Label text="{MonkeyUtils.getAppPath()}" paddingLeft="5"/>	
 		</mx:VBox>
 		
 		<mx:Form width="100%">
@@ -510,7 +510,8 @@
 				</mx:HBox>
 				
 			</mx:ControlBar>
-			<mx:DataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" height="{.6*height}" width="{.8*width}" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20">
+			<mx:DataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" 
+				height="80%" width="95%" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
 				<mx:columns>
 					<mx:DataGridColumn headerText="" width="40" editable="false"/>
 					<mx:DataGridColumn headerText="" width="20">
@@ -546,7 +547,7 @@
 			<mx:ControlBar width="100%">
 			<mx:Button label="Run" click="run()"/>
 			</mx:ControlBar>
-	    	<flexui:TestRunnerBase id="testRunner" height="{.9*flexrunner.height}" width="{.9*flexrunner.width}" />	    	
+	    	<flexui:TestRunnerBase id="testRunner" height="95%" width="95%" />	    	
 	    </mx:VBox>
 	</mx:TabNavigator> 
 		
