@@ -471,7 +471,7 @@
 		<mx:Button label="Record" mouseDown="if (btnRecord.selected) stopRecording()" click="if (btnRecord.selected) startRecording()" toggle="true" id="btnRecord"/>
 	</mx:ControlBar>
 	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all" selectedIndex="1">
-	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300">
+	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300" paddingLeft="5" paddingRight="5" paddingBottom="5">
 		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="10"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%" borderStyle="solid">
 			<mx:Label text="Test SWF Directory:" paddingLeft="5"/>
 			<mx:Label text="{MonkeyUtils.getAppPath()}" paddingLeft="5"/>	
@@ -497,7 +497,7 @@
 
 
 		</mx:VBox>
-		<mx:VBox label="Command List" width="100%" height="100%">
+		<mx:VBox label="Command List" width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			<mx:ControlBar width="100%">
 				<mx:Button label="Run" click="runSelected(event)"/>
 				<mx:Button label="Clear" click="commands.removeAll()"/>
@@ -511,7 +511,7 @@
 				
 			</mx:ControlBar>
 			<mx:DataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" 
-				height="80%" width="95%" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
+				height="100%" width="100%" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
 				<mx:columns>
 					<mx:DataGridColumn headerText="" width="40" editable="false"/>
 					<mx:DataGridColumn headerText="" width="20">
@@ -536,14 +536,18 @@
 				</mx:columns>
 			</mx:DataGrid>
 		</mx:VBox>
-		<mx:VBox label="TestCase Code" width="100%" height="100%" show="showSource(event)">
-			<mx:Panel>
-				<mx:Text text="The source below is generated from the currently selected commands in the Command List." fontStyle="italic" fontWeight="bold"/>
-			</mx:Panel>
+		
+		<mx:VBox label="TestCase Code" width="100%" height="100%" show="showSource(event)" 
+			paddingLeft="5" paddingRight="5" paddingBottom="5">
+			<mx:VBox borderStyle="solid" borderThickness="1" cornerRadius="10" backgroundColor="#6695BD" color="#FFFFFF">
+				<mx:Text text="The source below is generated from the currently selected commands in the Command List..." fontStyle="italic" fontWeight="bold" />
+			</mx:VBox>
 			<mx:CheckBox id="fullClass" label="Show complete TestCase" click="showSource(event)"/>
-			<mx:TextArea id="source"  width="100%" height="100%" x="0"/>
+			<mx:TextArea id="source"  width="100%" height="100%" x="0" verticalScrollPolicy="on"/>
 		</mx:VBox>					
-		<mx:VBox id="flexrunner" label="FlexUnit Runner" height="100%" width="100%" borderStyle="solid" borderThickness="1">
+		
+		<mx:VBox id="flexrunner" label="FlexUnit Runner" height="100%" width="100%"
+			paddingLeft="5" paddingRight="5" paddingBottom="5">
 			<mx:ControlBar width="100%">
 			<mx:Button label="Run" click="run()"/>
 			</mx:ControlBar>
