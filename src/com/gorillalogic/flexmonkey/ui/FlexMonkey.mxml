@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<aggro:CollapsableTitleWindow mouseDown="if (btnRecord.selected) stopRecording()" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" xmlns:aggro="de.aggro.components.*" xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="{.5*Application.application.width}" height="{.5*Application.application.height}" creationComplete="create()" >
+<aggro:CollapsableTitleWindow mouseDown="if (btnRecord.selected) stopRecording()" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" 
+		xmlns:aggro="de.aggro.components.*" 
+		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<mx:Script>
 		<![CDATA[
 			import mx.core.Application;
@@ -50,11 +52,11 @@
 		
 		private static var testSuite:TestSuite = new TestSuite();
 		
-		/**
-		 * Time to pause between command executions, in milliseconds. Defaults to 500.
-		 */ 
-		 [Bindable]
-		public var thinkTime:int = 500;
+//		/**
+//		 * Time to pause between command executions, in milliseconds. Defaults to 500.
+//		 */ 
+//		 [Bindable]
+//		public static var thinkTime:int = 500;
 		
 		
 		/** 
@@ -81,7 +83,8 @@
 		private var swfLoader:SWFLoader;
 	
 		private function create():void {
-			
+//			selectedSWF = new FileReference();
+//			selectedSWF.addEventListener(Event.SELECT, doSelectInBrowse);
 			cmdRunner.addEventListener(MonkeyEvent.ERROR, function(event:MonkeyEvent):void {
 				Assert.fail(event.message);
 			});
@@ -104,8 +107,6 @@
 			this.tabs.selectedIndex = 1;
 			Automation.automationManager.addEventListener(AutomationRecordEvent.RECORD, recordHandler, false, 0, true);    
 			AQAdapter.aqAdapter.beginRecording();
-
-
 		}
 
 		/**
@@ -258,8 +259,7 @@
 		 * 		]);
 		 */ 
 		public static function runCommands(cmds:Array, validator:Function=null):void {	
-			theMonkey.cmdRunner.runCommands(cmds, validator);				
-
+			theMonkey.cmdRunner.runCommands(cmds, validator, new int(theMonkey.thinkTime.text));				
 		}
 		
 		private function runSelected(event:MouseEvent):void {
@@ -449,46 +449,52 @@
 			private function filename(target:String):String {
 				return target.match(/.*\.swf\s*/) ? target : target + ".swf";
 			}
+			
+			
+//			private var selectedSWF:FileReference;
+//			private function openBrowseDialog():void {
+//				var filterArray:Array = new Array(new FileFilter("Flex Application Files (*.swf)", "*.swf"));
+//                selectedSWF.browse(filterArray);
+//            }
+//            
+//            private function doSelectInBrowse(evt:Event):void{
+//            	//Alert.show('yo something was selected: ' + selectedSWF.name, 'A Special Title', Alert.OK);
+//            	targetSwf.text=selectedSWF.name;
+//            }
 		
 		
 	]]>
 </mx:Script>
 	<mx:HRule width="100%"/>
-	<mx:VBox>
-	<mx:ControlBar width="100%">
-		<mx:Button label="Record" mouseDown="if (btnRecord.selected) stopRecording()" click="if (btnRecord.selected) startRecording()" toggle="true" id="btnRecord" />
+	<mx:VBox height="100%" width="100%">
+	<mx:ControlBar width="100%" height="25" verticalGap="0" paddingTop="0">
+		<mx:Button label="Record" mouseDown="if (btnRecord.selected) stopRecording()" click="if (btnRecord.selected) startRecording()" toggle="true" id="btnRecord"/>
 	</mx:ControlBar>
-	<mx:TabNavigator id="tabs" width="{.9*width}" height="{.8*height}" creationPolicy="all" selectedIndex="1">
-		<mx:VBox label="Setup" width="100%" height="100%">
-	<mx:TitleWindow id="swfPrompt" title="{'Enter name of the SWFs to load from ' + MonkeyUtils.getAppPath()}"  width="100%" height="100%">
-		<mx:HBox width="100%">
-			<mx:Form width="100%">
-
-
-				<mx:FormItem label="App to Test" width="100%" fontWeight="bold">
-					<mx:TextInput id="targetSwf" keyDown="targetSwf.errorString = null" width="100%"/>
-
-					<mx:HBox>
+	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all" selectedIndex="1">
+	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300">
+		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="20"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%">
+			<mx:Label text="Working Directory:"/>
+			<mx:Label text="{MonkeyUtils.getAppPath()}"/>	
+		</mx:VBox>
+		
+		<mx:Form width="100%">
+			<mx:FormItem label="App to Test" width="100%" fontWeight="bold">
+				<mx:TextInput id="targetSwf" keyDown="targetSwf.errorString = null" width="100%"/>
+				<mx:HBox>
 					<mx:FormItem label="Width">
-						<mx:TextInput id="targetSwfWidth"/>
+						<mx:TextInput width="50" id="targetSwfWidth"/>
 					</mx:FormItem>
 					<mx:FormItem label="Height">
-						<mx:TextInput id="targetSwfHeight"/>
+						<mx:TextInput width="50" id="targetSwfHeight"/>
 					</mx:FormItem>					
 				</mx:HBox>
 				<mx:Button label="Load SWF" click="loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))"/>
 				</mx:FormItem>
-
-			
 				<mx:FormItem label="Tests to Run (Optional)" width="100%" fontWeight="bold">
 					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/><mx:Button label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
 				</mx:FormItem>
 			</mx:Form>
 
-		</mx:HBox>
-
-		
-	</mx:TitleWindow>				
 
 		</mx:VBox>
 		<mx:VBox label="Command List" width="100%" height="100%">
@@ -496,7 +502,13 @@
 				<mx:Button label="Run" click="runSelected(event)"/>
 				<mx:Button label="Clear" click="commands.removeAll()"/>
 				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{swfLoader != null}"  textAlign="center"/>
-				<mx:CheckBox id="editEnabled" label="Enable editing"/>
+				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
+				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
+					<mx:Label text="Pause" textAlign="right" paddingTop="2"/>
+					<mx:TextInput id="thinkTime" width="50" text="501" />
+					<mx:Label text="ms" paddingTop="2"/>
+				</mx:HBox>
+				
 			</mx:ControlBar>
 			<mx:DataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" height="{.6*height}" width="{.8*width}" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20">
 				<mx:columns>
@@ -530,7 +542,7 @@
 			<mx:CheckBox id="fullClass" label="Show complete TestCase" click="showSource(event)"/>
 			<mx:TextArea id="source"  width="100%" height="100%" x="0"/>
 		</mx:VBox>					
-		<mx:VBox id="flexrunner" label="FlexUnit Runner" height="{.9*height}" width="{.9*width}" borderStyle="solid" borderThickness="1">
+		<mx:VBox id="flexrunner" label="FlexUnit Runner" height="100%" width="100%" borderStyle="solid" borderThickness="1">
 			<mx:ControlBar width="100%">
 			<mx:Button label="Run" click="run()"/>
 			</mx:ControlBar>
