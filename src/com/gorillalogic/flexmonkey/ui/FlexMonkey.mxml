@@ -559,10 +559,10 @@
 		
 		<mx:VBox id="flexrunner" label="FlexUnit Runner" height="100%" width="100%"
 			paddingLeft="5" paddingRight="5" paddingBottom="5">
-			<mx:ControlBar width="100%">
-			<mx:Button label="Run" click="run()"/>
-			</mx:ControlBar>
-	    	<flexui:TestRunnerBase id="testRunner" height="95%" width="95%" />	    	
+			<mx:HBox paddingRight="5" paddingLeft="5" paddingBottom="5">
+				<mx:Button label="Run" click="run()" />
+			</mx:HBox>
+			<flexui:TestRunnerBase id="testRunner" height="100%" width="100%" />	    	
 	    </mx:VBox>
 	</mx:TabNavigator> 
 	</mx:VBox>
