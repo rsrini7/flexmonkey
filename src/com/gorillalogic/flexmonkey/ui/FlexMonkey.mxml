@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<aggro:CollapsableTitleWindow mouseDown="if (btnRecord.selected) stopRecording()" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" 
+<?xml version="1.0" encoding="utf-8"?> 
+<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" 
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
+
 	<mx:Script>
 		<![CDATA[
 			import mx.core.Application;
@@ -52,13 +53,6 @@
 		
 		private static var testSuite:TestSuite = new TestSuite();
 		
-//		/**
-//		 * Time to pause between command executions, in milliseconds. Defaults to 500.
-//		 */ 
-//		 [Bindable]
-//		public static var thinkTime:int = 500;
-		
-		
 		/** 
 		 * Embeded CommandRunner
 		 */ 
@@ -102,7 +96,9 @@
 	
 		private function startRecording():void
 		{
-			btnRecord.label="Recording";
+			trace("startRecording()");
+			currentState="recording";
+			//btnRecord.label="Recording";
 			this.tabs.selectedIndex = 1;
 			Automation.automationManager.addEventListener(AutomationRecordEvent.RECORD, recordHandler, false, 0, true);    
 			AQAdapter.aqAdapter.beginRecording();
@@ -136,12 +132,13 @@
 
 		private function stopRecording():void
 		{
-			btnRecord.label="Record";
-			Automation.automationManager.removeEventListener(AutomationRecordEvent.RECORD, recordHandler);			
-			btnRecord.selected = false;
+			trace("stopRecording()");//, btnRecord.selected set to false");
+			currentState=null;
 			AQAdapter.aqAdapter.endRecording();
+			Automation.automationManager.removeEventListener(AutomationRecordEvent.RECORD, recordHandler);			
 			invalidateSize();
 			validateNow();
+			
 		}
 		
 		private function showSource(event:Event):void {
@@ -263,6 +260,7 @@
 		}
 		
 		private function runSelected(event:MouseEvent):void {
+			
 			var selectedCommands:Array = cmdGrid.selectedItems.reverse();
 			if (selectedCommands.length == 0) {
 				selectedCommands = ArrayCollection(cmdGrid.dataProvider).toArray();
@@ -270,6 +268,7 @@
 			runCommands(selectedCommands);
 		}
 		
+		// TODO wes- cannot find any reference to this function anywhere in the code... to be deleted?
 		private static function recordEnabled():Boolean {
 			return !theMonkey.btnRecord.enabled;
 		}
@@ -283,8 +282,7 @@
 			testSuite.addTestSuite(suite);
 		}
 		
-		public static function run():void {
-							
+		public static function run():void {		
 				theMonkey.collapseWindow();
 				theMonkey.testRunner.test = testSuite;
 				theMonkey.testRunner.startTest();				
@@ -395,6 +393,7 @@
 			}
 			
 			private function loadSwf(input:TextInput, name:String, width:int=0, height:int=0):SWFLoader {
+				btnRecord.enabled=true;
 				var loader:SWFLoader = new SWFLoader();
 				loader.addEventListener(FlexEvent.PREINITIALIZE, function():void {
 					loader.loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
@@ -449,15 +448,40 @@
 			private function filename(target:String):String {
 				return target.match(/.*\.swf\s*/) ? target : target + ".swf";
 			}
+			
+			
+//			private var selectedSWF:FileReference;
+//			private function openBrowseDialog():void {
+//				var filterArray:Array = new Array(new FileFilter("Flex Application Files (*.swf)", "*.swf"));
+//                selectedSWF.browse(filterArray);
+//            }
+//            
+//            private function doSelectInBrowse(evt:Event):void{
+//            	//Alert.show('yo something was selected: ' + selectedSWF.name, 'A Special Title', Alert.OK);
+//            	targetSwf.text=selectedSWF.name;
+//            }
+		
+		public function handleBtnRecordClick(event:Event):void{
+			trace("handleBtnRecordClick()");
+			trace("btnRecord.selected=" + btnRecord.selected);
+			if(!btnRecord.selected) startRecording();
+			else stopRecording();
+		}
+		
+		public function appMouseDown(event:Event):void{
+			trace("appMouseDown() in " + event.currentTarget.toString());
+			//trace("btnRecord.selected="+ btnRecord.selected);
+			if (btnRecord.selected) stopRecording();
+		}
+		
 	]]>
 </mx:Script>
-
 	<mx:HRule width="100%"/>
-	<mx:VBox height="100%" width="100%">
-	<mx:ControlBar width="100%" height="25" verticalGap="0" paddingTop="0">
-		<mx:Button label="Record" mouseDown="if (btnRecord.selected) stopRecording()" click="if (btnRecord.selected) startRecording()" toggle="true" id="btnRecord"/>
-	</mx:ControlBar>
-	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all" selectedIndex="1">
+	<mx:VBox height="100%" width="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
+	<!--<mx:ControlBar width="100%" height="25" verticalGap="0" paddingTop="0">-->
+		<mx:Button enabled="false" label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord"/> <!--mouseDown="if (btnRecord.selected) stopRecording()"-->
+	<!--</mx:ControlBar>-->
+	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all"> <!-- selectedIndex="1" -->
 	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300" paddingLeft="5" paddingRight="5" paddingBottom="5">
 		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="10"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%" borderStyle="solid">
 			<mx:Label text="Test SWF Directory:" paddingLeft="5"/>
@@ -492,7 +516,7 @@
 				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
 				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
 					<mx:Label text="Pause" textAlign="right" paddingTop="2"/>
-					<mx:TextInput id="thinkTime" width="50" text="501" />
+					<mx:TextInput id="thinkTime" width="65" text="501" />
 					<mx:Label text="ms" paddingTop="2"/>
 				</mx:HBox>
 				
@@ -541,7 +565,20 @@
 	    	<flexui:TestRunnerBase id="testRunner" height="95%" width="95%" />	    	
 	    </mx:VBox>
 	</mx:TabNavigator> 
-		
 	</mx:VBox>
+	
+	<mx:NumberValidator source="{thinkTime}" property="text" integerError="Enter Integer value"
+        minValue="5" maxValue="1800000" domain="int" trigger="{thinkTime}" triggerEvent="change" 
+        exceedsMaxError="Maximum value is 1/2 hr (1,800,000ms)" 
+        lowerThanMinError="Minimum value is 5ms"/>
 
+     
+	<aggro:states>
+		<mx:State name="recording">
+			<mx:SetStyle target="{btnRecord}" name="color" value="#E13636"/>
+			<mx:SetProperty target="{btnRecord}" name="label" value="Recording"/>
+			<mx:SetStyle target="{btnRecord}" name="textRollOverColor" value="#E13636"/>
+		</mx:State>
+	</aggro:states>   
+	
 </aggro:CollapsableTitleWindow>
