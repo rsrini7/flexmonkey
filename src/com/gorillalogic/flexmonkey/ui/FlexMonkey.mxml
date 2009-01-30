@@ -3,18 +3,12 @@
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
-	<mx:Script>
-		<![CDATA[
-			import mx.core.Application;
-			import com.flexspy.FlexSpy;
-			import mx.collections.ArrayCollection;
-		]]>
-	</mx:Script>
-
-
 	
 <mx:Script>
 	<![CDATA[
+		import mx.core.Application;
+		import com.flexspy.FlexSpy;
+		import mx.collections.ArrayCollection;
 		import mx.controls.ToolTip;
 		import mx.managers.ToolTipManager;
 		import mx.controls.SWFLoader;
@@ -471,7 +465,11 @@
 		public function appMouseDown(event:Event):void{
 			trace("appMouseDown() in " + event.currentTarget.toString());
 			//trace("btnRecord.selected="+ btnRecord.selected);
-			if (btnRecord.selected) stopRecording();
+			//if (btnRecord.selected) stopRecording();
+			if(currentState=='recording'){
+				event.stopPropagation();
+				event.stopImmediatePropagation();
+			}
 		}
 		
 	]]>
