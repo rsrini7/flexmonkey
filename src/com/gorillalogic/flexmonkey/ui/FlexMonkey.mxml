@@ -505,6 +505,12 @@
 					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/><mx:Button label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
 				</mx:FormItem>
 			</mx:Form>
+		<!--<mx:VBox height="100%" borderStyle="solid" cornerRadius="6" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+			<mx:Label text="Window Preferences" fontWeight="bold"/>
+			<mx:CheckBox id="minOnRecord" label="Minimize on Record" fontWeight="bold"/>
+			<mx:CheckBox id="minOnPlayback" label="Minimize on Playback" fontWeight="bold"/>
+		</mx:VBox>
+		-->
 
 
 		</mx:VBox>
@@ -515,7 +521,7 @@
 				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{swfLoader != null}"  textAlign="center"/>
 				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
 				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
-					<mx:Label text="Pause" textAlign="right" paddingTop="2"/>
+					<mx:Label text="ThinkTime" textAlign="right" paddingTop="2"/>
 					<mx:TextInput id="thinkTime" width="65" text="501" />
 					<mx:Label text="ms" paddingTop="2"/>
 				</mx:HBox>
