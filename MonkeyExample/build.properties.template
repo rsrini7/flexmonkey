@@ -9,12 +9,14 @@ flex.ant.loc=${flex.home}/ant
 # Source of app to be tested with FlexMonkey
 main.mxml=MonkeyContacts.mxml
 main.test.mxml=FlexMonkeyTests.mxml
+test.html.wrapper=MonkeyContactsTest.html
 
 # Test properties for running tests from Ant
-flex.unit.swf=${basedir}/build/MonkeyContactsTest.html
-# flex.unit.swf=http://localhost:8080/gxe/flex/MonkeyContactsTest.html
+flex.unit.swf=${basedir}/build/${test.html.wrapper}
+# flex.unit.swf=http://localhost:8080/gxe/flex/${test.html.wrapper}
 report.dir=${basedir}/report
 
 # FlexMonkeyLauncher.swc location
+monkey.dir=${basedir}/../FlexMonkey/build
 monkey.launcher.dir=${basedir}/../FlexMonkeyLauncher/build
 

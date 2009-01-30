@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <project name="Monkey Example" default="test" basedir=".">
 
+<property name="ANT_OPTS" value="-Xms1024m -Xmx1024m -XX:PermSize=192m -XX:NewSize=192m -XX:-UseParallelGC"/>
+
  <!-- specific directory -->
  <property name="src.dir" value="src"/>
  <property name="build.dir" value="build"/>
@@ -9,6 +11,7 @@
 
  <!-- Load Environment specific properties from properties file -->
  <property file="build.properties"/>
+ <property file="build.properties.template"/>
  <fail unless="flex.home" message="flex.home should be set (in build.properties file)"/>
  <property name="FLEX_HOME" value="${flex.home}"/>
 	
@@ -22,15 +25,25 @@
  <!-- Load the flex tasks for compiling the actionScript code and running flexUnit --> 
  <taskdef resource="flexTasks.tasks" classpath="${flex.ant.loc}/lib/flexTasks.jar"/> 
 	
- <!-- Load the flexunit task definitions. -->
- <taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpath="${flex.ant.loc}/lib/FlexAntTasks.jar"/>
+  <!-- FlexUnit classpath -->
+   <path id="flexunit.classpath">
+      <fileset dir="${basedir}/ant/FlexUnitAntTasks">
+        <include name="*.jar"/>
+      </fileset>
+   </path>
+	
+<!-- Load the flexunit task definitions.  -->
+ <taskdef resource="com/adobe/ac/ant/tasks/tasks.properties" classpathref="flexunit.classpath"/>
 
  <!-- Compile Flex files -->
+ <target name="all" depends="clean, compile-all, test"/>
 	
  <target name="clean">
 	<delete dir="${build.dir}"/>
+	<delete dir="${report.dir}"/>
  </target>
 	
+ <target name="compile-all" depends="compile, compile-tests" />
  <target name="compile" description="Compile the flex part">
 
    <mxmlc file="${src.dir}/${main.mxml}"
@@ -79,9 +92,10 @@
 	   </mxmlc>
 	 </target>	
 
- <target name="test" depends="compile,compile-tests">	
+ <target name="test">	
  	<copy file="${src.dir}/${test.html.wrapper}" todir="${build.dir}" failonerror="false"/>
- 	<copy file="${lib.dir}/FlexMonkeyLauncher.swf" todir="${build.dir}"/>
+ 	<copy file="${monkey.dir}/FlexMonkey.swc" todir="${build.dir}"/>
+ 	<copy file="${monkey.launcher.dir}/FlexMonkeyLauncher.swf" todir="${build.dir}"/>
  	<flexunit
 		
 		timeout="0"
