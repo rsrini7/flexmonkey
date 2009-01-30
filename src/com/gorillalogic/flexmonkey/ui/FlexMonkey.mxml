@@ -2,7 +2,7 @@
 <aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" 
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
-
+	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
 	<mx:Script>
 		<![CDATA[
 			import mx.core.Application;
@@ -256,7 +256,7 @@
 		 * 		]);
 		 */ 
 		public static function runCommands(cmds:Array, validator:Function=null):void {	
-			theMonkey.cmdRunner.runCommands(cmds, validator, new int(theMonkey.thinkTime.text));				
+			theMonkey.cmdRunner.runCommands(cmds, validator, new int(theMonkey.thinkTime.text));			
 		}
 		
 		private function runSelected(event:MouseEvent):void {
@@ -578,6 +578,7 @@
 			<mx:SetStyle target="{btnRecord}" name="color" value="#E13636"/>
 			<mx:SetProperty target="{btnRecord}" name="label" value="Recording"/>
 			<mx:SetStyle target="{btnRecord}" name="textRollOverColor" value="#E13636"/>
+			<mx:SetProperty name="title" value="FlexMonkey! - recording"/>
 		</mx:State>
 	</aggro:states>   
 	
