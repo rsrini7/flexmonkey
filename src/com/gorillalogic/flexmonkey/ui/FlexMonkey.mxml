@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!" xmlns:flexui="flexunit.flexui.*" 
+<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!   " xmlns:flexui="flexunit.flexui.*" 
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
@@ -355,16 +355,20 @@
 //				loader.load(request);
 		}
 		
-			private function load(config:XML):void {
+//			private function load(config:XML):void {
+//
+//				var target:String = config.@targetSwf;
+//				var test:String = config.@testSwf;				
+//				var visible:String = config.@visible;
+//				var autoStart:String = config.@autoStart;
+//				var width:int = config.@width;
+//				var height:int = config.@height;
+//				loadWith(target, test, visible, autoStart, width, height);
+//
+//			}
 
-				var target:String = config.@targetSwf;
-				var test:String = config.@testSwf;				
-				var visible:String = config.@visible;
-				var autoStart:String = config.@autoStart;
-				var width:int = config.@width;
-				var height:int = config.@height;
-				loadWith(target, test, visible, autoStart, width, height);
-
+			private function handleBtnLoadSWF():void{
+				this.swfLoader = loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))
 			}
 			
 			private function loadWith(target:String, test:String, vis:String="true", autoStart:String="false", width:int=0, height:int=0): void {
@@ -375,7 +379,7 @@
 				
 				swfLoader = loadSwf(targetSwf, target, width, height);
 				if (test != null && test.length > 0) {
-					loadSwf(testSwf, test);
+					swfLoader = loadSwf(testSwf, test);
 				}
 				
 				// Doesn't work. Starts tests before app is finished loading?
@@ -387,7 +391,6 @@
 			}
 			
 			private function loadSwf(input:TextInput, name:String, width:int=0, height:int=0):SWFLoader {
-				btnRecord.enabled=true;
 				var loader:SWFLoader = new SWFLoader();
 				loader.addEventListener(FlexEvent.PREINITIALIZE, function():void {
 					loader.loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
@@ -401,18 +404,13 @@
 						Alert.show("Unable to load file " + MonkeyUtils.getAppPath() + "/" + filename(name));
 						return;
 					}
-					
 					showError(input, name);
-
-
 				});
 				
 				var fname:String = filename(name);
 				if (input != null) {
 					input.text = fname;
 				}
-
-
 
 				loader.source = fname;
 				loader.scaleContent = true;
@@ -443,18 +441,6 @@
 				return target.match(/.*\.swf\s*/) ? target : target + ".swf";
 			}
 			
-			
-//			private var selectedSWF:FileReference;
-//			private function openBrowseDialog():void {
-//				var filterArray:Array = new Array(new FileFilter("Flex Application Files (*.swf)", "*.swf"));
-//                selectedSWF.browse(filterArray);
-//            }
-//            
-//            private function doSelectInBrowse(evt:Event):void{
-//            	//Alert.show('yo something was selected: ' + selectedSWF.name, 'A Special Title', Alert.OK);
-//            	targetSwf.text=selectedSWF.name;
-//            }
-		
 		public function handleBtnRecordClick(event:Event):void{
 			trace("handleBtnRecordClick()");
 			trace("btnRecord.selected=" + btnRecord.selected);
@@ -465,9 +451,8 @@
 		public function appMouseDown(event:Event):void{
 			trace("appMouseDown() in " + event.currentTarget.toString());
 			//trace("btnRecord.selected="+ btnRecord.selected);
-			//if (btnRecord.selected) stopRecording();
-			if(currentState=='recording'){
-				event.stopPropagation();
+			if (btnRecord.selected){ 
+				stopRecording();
 				event.stopImmediatePropagation();
 			}
 		}
@@ -477,7 +462,7 @@
 	<mx:HRule width="100%"/>
 	<mx:VBox height="100%" width="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
 	<!--<mx:ControlBar width="100%" height="25" verticalGap="0" paddingTop="0">-->
-		<mx:Button enabled="false" label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord"/> <!--mouseDown="if (btnRecord.selected) stopRecording()"-->
+		<mx:Button enabled="{theMonkey.swfLoader!=null}" label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord"/> <!--mouseDown="if (btnRecord.selected) stopRecording()"-->
 	<!--</mx:ControlBar>-->
 	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all"> <!-- selectedIndex="1" -->
 	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300" paddingLeft="5" paddingRight="5" paddingBottom="5">
@@ -497,15 +482,17 @@
 						<mx:TextInput width="50" id="targetSwfHeight"/>
 					</mx:FormItem>					
 				</mx:HBox>
-				<mx:Button label="Load SWF" click="loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))"/>
+				<mx:Button label="Load SWF" click="handleBtnLoadSWF()"/>
 				</mx:FormItem>
 				<mx:FormItem label="Tests to Run (Optional)" width="100%" fontWeight="bold">
-					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/><mx:Button label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
+					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/>
+					<mx:Button label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
 				</mx:FormItem>
 			</mx:Form>
 		<!--<mx:VBox height="100%" borderStyle="solid" cornerRadius="6" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 			<mx:Label text="Window Preferences" fontWeight="bold"/>
 			<mx:CheckBox id="minOnRecord" label="Minimize on Record" fontWeight="bold"/>
+			<mx:CheckBox id="refreshSWF" label="Refresh SWF on Playback" fontWeight="bold"/>
 			<mx:CheckBox id="minOnPlayback" label="Minimize on Playback" fontWeight="bold"/>
 		</mx:VBox>
 		-->
@@ -516,7 +503,7 @@
 			<mx:ControlBar width="100%">
 				<mx:Button label="Run" click="runSelected(event)"/>
 				<mx:Button label="Clear" click="commands.removeAll()"/>
-				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{swfLoader != null}"  textAlign="center"/>
+				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{theMonkey.swfLoader != null}"  textAlign="center"/>
 				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
 				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
 					<mx:Label text="ThinkTime" textAlign="right" paddingTop="2"/>
