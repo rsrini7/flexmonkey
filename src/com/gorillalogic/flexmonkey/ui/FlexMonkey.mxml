@@ -92,7 +92,6 @@
 		{
 			trace("startRecording()");
 			currentState="recording";
-			//btnRecord.label="Recording";
 			this.tabs.selectedIndex = 1;
 			Automation.automationManager.addEventListener(AutomationRecordEvent.RECORD, recordHandler, false, 0, true);    
 			AQAdapter.aqAdapter.beginRecording();
@@ -126,13 +125,12 @@
 
 		private function stopRecording():void
 		{
-			trace("stopRecording()");//, btnRecord.selected set to false");
+			trace("stopRecording()");
 			currentState=null;
 			AQAdapter.aqAdapter.endRecording();
 			Automation.automationManager.removeEventListener(AutomationRecordEvent.RECORD, recordHandler);			
 			invalidateSize();
 			validateNow();
-			
 		}
 		
 		private function showSource(event:Event):void {
@@ -263,8 +261,8 @@
 		}
 		
 		// TODO wes- cannot find any reference to this function anywhere in the code... to be deleted?
-		private static function recordEnabled():Boolean {
-			return !theMonkey.btnRecord.enabled;
+		private static function isRecording():Boolean {
+			return Automation.automationManager.recording;
 		}
 		
 		public static function findComponentWith(value:String, prop:String="automationName", container:UIComponent=null):UIComponent {
@@ -332,40 +330,7 @@
 					showMonkey();
 					tabs.selectedIndex = 0;
 					targetSwf.errorString = 'No targetSwf specified. Please specify a SWF in the working directory to run.'
-
-			
-//				var config:String = "FlexMonkey.xml";
-//				
-//				var loader:URLLoader = new URLLoader();
-//
-//			   	loader.addEventListener(Event.COMPLETE, function(event:Event):void {
-//			   		load(new XML(URLLoader(event.target).data))
-//			   	});	
-//
-//			   	loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
-//					// If no config file, assume they're going to specify SWF manually thru UI			   		
-//					showMonkey();
-//					tabs.selectedIndex = 0;
-//					targetSwf.errorString = 'Unable to find ' + MonkeyUtils.getAppPath() + '/FlexMonkey.xml. Please specify a SWF to run.'
-//				});
-//
-//			   	
-//				var request:URLRequest = new URLRequest(config);
-//
-//				loader.load(request);
 		}
-		
-//			private function load(config:XML):void {
-//
-//				var target:String = config.@targetSwf;
-//				var test:String = config.@testSwf;				
-//				var visible:String = config.@visible;
-//				var autoStart:String = config.@autoStart;
-//				var width:int = config.@width;
-//				var height:int = config.@height;
-//				loadWith(target, test, visible, autoStart, width, height);
-//
-//			}
 
 			private function handleBtnLoadSWF():void{
 				this.swfLoader = loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))
@@ -444,6 +409,10 @@
 		public function handleBtnRecordClick(event:Event):void{
 			trace("handleBtnRecordClick()");
 			trace("btnRecord.selected=" + btnRecord.selected);
+			if(!btnRecord.enabled){
+				//ignore click
+				return;
+			}
 			if(!btnRecord.selected) startRecording();
 			else stopRecording();
 		}
