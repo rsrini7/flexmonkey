@@ -7,14 +7,14 @@
 	   <mx:headerRenderer>
 	   		<mx:Component>
 	   			<mx:Canvas width="30" height="100%" click="{outerDocument.headerCheckboxClicked(event)}">	   					   			
-	   				<mx:CheckBox verticalCenter="0" horizontalCenter="-4" id="headerCheckbox" mouseEnabled="false" selected="{outerDocument.allItemsSelected(outerDocument.selectedItems)}" />	   				
+	   				<mx:CheckBox verticalCenter="0" horizontalCenter="0" id="headerCheckbox" mouseEnabled="false" selected="{outerDocument.allItemsSelected(outerDocument.selectedItems)}" />	   				
 	   			</mx:Canvas>
 	   		</mx:Component>
 	   </mx:headerRenderer>
 	   <mx:itemRenderer>
 	      <mx:Component>
 	      	 <mx:Canvas width="30" height="100%">			     
-	         	<mx:CheckBox id="selectedBox" verticalCenter="0" horizontalCenter="-4" mouseEnabled="false" selected="{outerDocument.isSelected(data,outerDocument.selectedItems)}"/>					      	 	      	 							      	 										      	 			         	         		         	         		      
+	         	<mx:CheckBox id="selectedBox" verticalCenter="0" horizontalCenter="0" mouseEnabled="false" selected="{outerDocument.isSelected(data,outerDocument.selectedItems)}"/>					      	 	      	 							      	 										      	 			         	         		         	         		      
 	    	 </mx:Canvas>
 	      </mx:Component>						
 	   </mx:itemRenderer> 
