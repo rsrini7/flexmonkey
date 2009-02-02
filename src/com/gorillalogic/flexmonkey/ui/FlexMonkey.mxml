@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!   " xmlns:flexui="flexunit.flexui.*" 
+<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!   " 
+		xmlns:flexui="flexunit.flexui.*" 
 		xmlns:aggro="de.aggro.components.*" 
-		xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
+		xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:gl="com.gorillalogic.flexmonkey.controls.*"
+		layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
 	
 <mx:Script>
@@ -253,7 +256,7 @@
 		
 		private function runSelected(event:MouseEvent):void {
 			
-			var selectedCommands:Array = cmdGrid.selectedItems.reverse();
+			var selectedCommands:Array = cmdGrid.selectedItems;
 			if (selectedCommands.length == 0) {
 				selectedCommands = ArrayCollection(cmdGrid.dataProvider).toArray();
 			}	
@@ -481,10 +484,10 @@
 				</mx:HBox>
 				
 			</mx:ControlBar>
-			<mx:DataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" 
-				height="100%" width="100%" dataProvider="{commands}" allowMultipleSelection="true" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
-				<mx:columns>
-					<mx:DataGridColumn headerText="" width="40" editable="false"/>
+			<gl:CheckBoxDataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" 
+				height="100%" width="100%" dataProvider="{commands}" allowMultipleSelection="true" sortableColumns="false" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
+				<gl:columns>
+					<!-- <mx:DataGridColumn headerText="" width="40" editable="false"/> -->
 					<mx:DataGridColumn headerText="" width="20">
 						<mx:itemRenderer>
 							<mx:Component>
@@ -495,17 +498,11 @@
 					<mx:DataGridColumn headerText="Command" dataField="command" width="100"/>					
 					<mx:DataGridColumn headerText="Value" dataField="value" width="100"/>
 					<mx:DataGridColumn headerText="Property" dataField="prop" width="100"/>					
-					<mx:DataGridColumn headerText="Arguments" dataField="args" width="200" editable="false">
-						<mx:itemEditor>
-							<mx:Component>
-									<mx:TextArea text="{data.args.join('\n')}"/>
-							</mx:Component>
-						</mx:itemEditor>	
-					</mx:DataGridColumn>						
+					<mx:DataGridColumn headerText="Arguments" dataField="args" width="200" itemEditor="com.gorillalogic.flexmonkey.controls.ArrayInput" editorDataField="data"/>
 					<mx:DataGridColumn headerText="Container Value" dataField="containerId" width="100"/>
 					<mx:DataGridColumn headerText="Container Property" dataField="containerProp" width="100"/>										
-				</mx:columns>
-			</mx:DataGrid>
+				</gl:columns>
+			</gl:CheckBoxDataGrid>
 		</mx:VBox>
 		
 		<mx:VBox label="TestCase Code" width="100%" height="100%" show="showSource(event)" 
