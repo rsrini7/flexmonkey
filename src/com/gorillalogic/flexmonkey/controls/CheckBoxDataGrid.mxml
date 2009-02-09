@@ -22,6 +22,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.automation.IAutomationObject;
 			import mx.controls.listClasses.IListItemRenderer;
 			import mx.events.DataGridEvent;
 			import mx.collections.ListCollectionView;			
@@ -89,6 +90,17 @@
 					event.preventDefault();
 				}
 			}			
+			
+		/**
+		 * overriding the pair of functions numAutomationChildern and getAutomationChildAt() 
+		 * effectively removes the ability for this component to be recognized by the Adobe automation engine - wes */	
+		override public function get numAutomationChildren():int {
+			return 0;
+		}
+		
+		override public function getAutomationChildAt(index:int):IAutomationObject{
+			return null;
+		}
 			
 		]]>
 	</mx:Script>	

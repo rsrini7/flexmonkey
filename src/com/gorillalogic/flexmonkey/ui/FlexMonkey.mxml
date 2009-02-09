@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<aggro:CollapsableTitleWindow mouseDown="appMouseDown(event)" title="FlexMonkey!   " 
+<aggro:CollapsableTitleWindow title="FlexMonkey!   "
 		xmlns:flexui="flexunit.flexui.*" 
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" 
 		xmlns:gl="com.gorillalogic.flexmonkey.controls.*"
+		click="appClick(event)"
 		layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
 	
@@ -285,7 +286,6 @@
 					theMonkey.tabs.selectedIndex = 3;
 					theMonkey.expandWindow();
 					});
-
 		}
 		
 		
@@ -416,26 +416,21 @@
 				//ignore click
 				return;
 			}
-			if(!btnRecord.selected) startRecording();
-			else stopRecording();
+			if(!btnRecord.selected){ startRecording(); }
+			else {stopRecording();}
+			event.stopImmediatePropagation();
 		}
 		
-		public function appMouseDown(event:Event):void{
-			trace("appMouseDown() in " + event.currentTarget.toString());
-			//trace("btnRecord.selected="+ btnRecord.selected);
-			if (btnRecord.selected){ 
-				stopRecording();
-				event.stopImmediatePropagation();
-			}
+		public function appClick(event:Event):void{
+			trace("appClick()");
+			
 		}
 		
 	]]>
 </mx:Script>
 	<mx:HRule width="100%"/>
-	<mx:VBox height="100%" width="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
-	<!--<mx:ControlBar width="100%" height="25" verticalGap="0" paddingTop="0">-->
-		<mx:Button enabled="{theMonkey.swfLoader!=null}" label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord"/> <!--mouseDown="if (btnRecord.selected) stopRecording()"-->
-	<!--</mx:ControlBar>-->
+	<gl:IgnoreAutomationVBox height="100%" width="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
+	<mx:Button label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord" toolTip="toggles Recording"/>
 	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all"> <!-- selectedIndex="1" -->
 	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300" paddingLeft="5" paddingRight="5" paddingBottom="5">
 		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="10"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%" borderStyle="solid">
@@ -454,13 +449,14 @@
 						<mx:TextInput width="50" id="targetSwfHeight"/>
 					</mx:FormItem>					
 				</mx:HBox>
-				<mx:Button label="Load SWF" click="handleBtnLoadSWF()"/>
+				<mx:Button id="btnSetupLoadSWF" label="Load SWF" click="handleBtnLoadSWF()"/>
 				</mx:FormItem>
 				<mx:FormItem label="Tests to Run (Optional)" width="100%" fontWeight="bold">
 					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/>
-					<mx:Button label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
+					<mx:Button id="btnSetupLoadTestSWF" label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
 				</mx:FormItem>
 			</mx:Form>
+		<!-- New Features Code -->
 		<!--<mx:VBox height="100%" borderStyle="solid" cornerRadius="6" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
 			<mx:Label text="Window Preferences" fontWeight="bold"/>
 			<mx:CheckBox id="minOnRecord" label="Minimize on Record" fontWeight="bold"/>
@@ -473,8 +469,8 @@
 		</mx:VBox>
 		<mx:VBox label="Command List" width="100%" height="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
 			<mx:ControlBar width="100%">
-				<mx:Button label="Run" click="runSelected(event)"/>
-				<mx:Button label="Clear" click="commands.removeAll()"/>
+				<mx:Button id="btnCommandRun" label="Run" click="runSelected(event)"/>
+				<mx:Button id="btnCommandClear" label="Clear" click="commands.removeAll()"/>
 				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{theMonkey.swfLoader != null}"  textAlign="center"/>
 				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
 				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
@@ -522,7 +518,7 @@
 			<flexui:TestRunnerBase id="testRunner" height="100%" width="100%" />	    	
 	    </mx:VBox>
 	</mx:TabNavigator> 
-	</mx:VBox>
+	</gl:IgnoreAutomationVBox>
 	
 	<mx:NumberValidator source="{thinkTime}" property="text" integerError="Enter Integer value"
         minValue="5" maxValue="1800000" domain="int" trigger="{thinkTime}" triggerEvent="change" 
@@ -535,7 +531,13 @@
 			<mx:SetStyle target="{btnRecord}" name="color" value="#E13636"/>
 			<mx:SetProperty target="{btnRecord}" name="label" value="Recording"/>
 			<mx:SetStyle target="{btnRecord}" name="textRollOverColor" value="#E13636"/>
+			<mx:SetStyle target="{btnRecord}" name="tooltip" value="Click to STOP recording"/>
 			<mx:SetProperty name="title" value="FlexMonkey! - recording"/>
+			<mx:SetProperty target="{btnFlexSpy}" name="enabled" value="false"/>
+			<mx:SetProperty target="{btnCommandRun}" name="enabled" value="false"/>
+			<mx:SetProperty target="{btnCommandClear}" name="enabled" value="false"/>
+			<mx:SetProperty target="{btnSetupLoadSWF}" name="enabled" value="false"/>
+			<mx:SetProperty target="{btnSetupLoadTestSWF}" name="enabled" value="false"/>
 		</mx:State>
 	</aggro:states>   
 	
