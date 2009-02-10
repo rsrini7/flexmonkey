@@ -4,7 +4,7 @@
 		xmlns:aggro="de.aggro.components.*" 
 		xmlns:mx="http://www.adobe.com/2006/mxml" 
 		xmlns:gl="com.gorillalogic.flexmonkey.controls.*"
-		click="appClick(event)"
+		mouseDown="appMouseDown(event)"
 		layout="vertical" width="100%" height="100%" minHeight="300" creationComplete="create()" >
 	<aggro:titleIcon>@Embed(source='../../../../../assets/flexMonkeyIcon.png')</aggro:titleIcon>
 	
@@ -96,6 +96,7 @@
 		{
 			trace("startRecording()");
 			currentState="recording";
+			//if(cbMinOnRecord.selected) theMonkey.collapseWindow();
 			this.tabs.selectedIndex = 1;
 			Automation.automationManager.addEventListener(AutomationRecordEvent.RECORD, recordHandler, false, 0, true);    
 			AQAdapter.aqAdapter.beginRecording();
@@ -135,6 +136,7 @@
 			Automation.automationManager.removeEventListener(AutomationRecordEvent.RECORD, recordHandler);			
 			invalidateSize();
 			validateNow();
+			//if(cbMinOnRecord.selected) theMonkey.expandWindow();
 		}
 		
 		private function showSource(event:Event):void {
@@ -328,11 +330,10 @@
 					return;
 					
 				}
-
-					// If no config file, assume they're going to specify SWF manually thru UI			   		
-					showMonkey();
-					tabs.selectedIndex = 0;
-					targetSwf.errorString = 'No targetSwf specified. Please specify a SWF in the working directory to run.'
+				// If no config file, assume they're going to specify SWF manually thru UI			   		
+				showMonkey();
+				tabs.selectedIndex = 0;
+				targetSwf.errorString = 'No targetSwf specified. Please specify a SWF in the working directory to run.'
 		}
 
 			private function handleBtnLoadSWF():void{
@@ -416,21 +417,23 @@
 				//ignore click
 				return;
 			}
-			if(!btnRecord.selected){ startRecording(); }
-			else {stopRecording();}
+			if(currentState=="recording" ){ stopRecording(); }
+			else { startRecording(); }
 			event.stopImmediatePropagation();
 		}
 		
-		public function appClick(event:Event):void{
-			trace("appClick()");
-			
+		public function appMouseDown(event:Event):void{
+			trace("appMouseDown -- " + event);
+			if(currentState=="recording" && cbStopRecordingOnFocus.selected==true){
+				stopRecording();
+			}
 		}
 		
 	]]>
 </mx:Script>
 	<mx:HRule width="100%"/>
 	<gl:IgnoreAutomationVBox height="100%" width="100%" paddingLeft="5" paddingRight="5" paddingBottom="5">
-	<mx:Button label="Record" mouseDown="handleBtnRecordClick(event)" toggle="true" id="btnRecord" toolTip="toggles Recording"/>
+	<mx:Button label="Record" mouseDown="handleBtnRecordClick(event)" toggle="false" id="btnRecord" toolTip="toggles Recording"/>
 	<mx:TabNavigator id="tabs" width="99%" height="99%" creationPolicy="all"> <!-- selectedIndex="1" -->
 	<mx:VBox label="Setup" width="100%" height="100%" id="setupVbox" minHeight="300" paddingLeft="5" paddingRight="5" paddingBottom="5">
 		<mx:VBox borderColor="#FFFFFF" borderThickness="1" cornerRadius="10"  backgroundColor="#6695BD" color="#FFFFFF" fontWeight="bold" width="100%" borderStyle="solid">
@@ -455,15 +458,16 @@
 					<mx:TextInput id="testSwf" keyDown="testSwf.errorString = null" width="100%"/>
 					<mx:Button id="btnSetupLoadTestSWF" label="Load SWF" click="loadSwf(testSwf, testSwf.text)"/>						
 				</mx:FormItem>
+				<mx:FormItem label="Window Preferences" width="100%" fontWeight="bold">
+					<mx:VBox height="100%" borderStyle="solid" cornerRadius="6" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+						<mx:CheckBox id="cbStopRecordingOnFocus" label="Stop recording on focus" toolTip="stops recording when the FlexMonkey window is brought into focus by a click" fontWeight="bold" selected="true"/> 
+						<!--<mx:CheckBox id="cbMinOnRecord" label="Minimize on Record" fontWeight="bold"/>-->
+						<!--<mx:CheckBox id="refreshSWF" label="Refresh SWF on Playback" fontWeight="bold"/>
+						<mx:CheckBox id="minOnPlayback" label="Minimize on Playback" fontWeight="bold"/>-->
+					</mx:VBox>
+				</mx:FormItem>
 			</mx:Form>
-		<!-- New Features Code -->
-		<!--<mx:VBox height="100%" borderStyle="solid" cornerRadius="6" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-			<mx:Label text="Window Preferences" fontWeight="bold"/>
-			<mx:CheckBox id="minOnRecord" label="Minimize on Record" fontWeight="bold"/>
-			<mx:CheckBox id="refreshSWF" label="Refresh SWF on Playback" fontWeight="bold"/>
-			<mx:CheckBox id="minOnPlayback" label="Minimize on Playback" fontWeight="bold"/>
-		</mx:VBox>
-		-->
+	
 
 
 		</mx:VBox>
