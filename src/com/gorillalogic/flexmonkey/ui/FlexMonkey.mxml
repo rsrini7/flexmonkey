@@ -72,7 +72,9 @@
 		private static var visible:Boolean = true;
 		
 		[Bindable]
-		private var swfLoader:SWFLoader;
+		private var targetSwfLoader:SWFLoader;
+		[Bindable]
+		private var testSwfLoader:SWFLoader;
 	
 		private function create():void {
 			cmdRunner.addEventListener(MonkeyEvent.ERROR, function(event:MonkeyEvent):void {
@@ -278,6 +280,7 @@
 		
 		public static function addTestSuite(suite:Class):void {
 			testSuite.addTestSuite(suite);
+			theMonkey.checkForAutoRun();
 		}
 		
 		public static function run():void {		
@@ -337,8 +340,35 @@
 		}
 
 			private function handleBtnLoadSWF():void{
-				this.swfLoader = loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))
+				this.targetSwfLoader = loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))
 			}
+			
+			private function load(config:XML):void {
+                var target:String = config.@targetSwf;
+                var test:String = config.@testSwf;                
+                var visible:String = config.@visible;
+                var autoStart:String = config.@autoStart;
+                var width:int = config.@width;
+                var height:int = config.@height;
+                loadWith(target, test, visible, autoStart, width, height);
+            }
+            
+            protected var initialNumLoaded : int = 0;
+            protected var autorunComplete : Boolean = false;
+            
+            protected function swfInitComplete(event : Event) : void{
+                initialNumLoaded++;
+                checkForAutoRun();
+            }
+            
+            protected function checkForAutoRun() : void {
+                if (initialNumLoaded == 2 
+                    && testSuite.countTestCases() > 0
+                    && !autorunComplete){
+                    autorunComplete = true;
+                    FlexMonkey.run();
+                }   
+            }
 			
 			private function loadWith(target:String, test:String, vis:String="true", autoStart:String="false", width:int=0, height:int=0): void {
 				visible = !(vis == "false");
@@ -346,20 +376,21 @@
 					showMonkey();
 				}
 				
-				swfLoader = loadSwf(targetSwf, target, width, height);
+				targetSwfLoader = loadSwf(targetSwf, target, width, height);
 				if (test != null && test.length > 0) {
-					swfLoader = loadSwf(testSwf, test);
+					testSwfLoader = loadSwf(testSwf, test);
 				}
 				
 				// Doesn't work. Starts tests before app is finished loading?
-				if (autoStart == "true") {
-					swfLoader.addEventListener(Event.INIT, function():void {
+				if (autoStart == "true" && testSwfLoader!=null) {
+					testSwfLoader.addEventListener(Event.INIT, function():void {
 						FlexMonkey.run();
 					});	
 				}			
 			}
 			
 			private function loadSwf(input:TextInput, name:String, width:int=0, height:int=0):SWFLoader {
+				trace("loadSwf() - " + input + ", " + name);
 				var loader:SWFLoader = new SWFLoader();
 				loader.addEventListener(FlexEvent.PREINITIALIZE, function():void {
 					loader.loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
@@ -429,6 +460,10 @@
 			}
 		}
 		
+		public function handleFlexSpyClick(event:Event):void{
+			FlexSpy.show(targetSwfLoader.content['application']);
+		}
+		
 	]]>
 </mx:Script>
 	<mx:HRule width="100%"/>
@@ -475,7 +510,7 @@
 			<mx:ControlBar width="100%">
 				<mx:Button id="btnCommandRun" label="Run" click="runSelected(event)"/>
 				<mx:Button id="btnCommandClear" label="Clear" click="commands.removeAll()"/>
-				<mx:Button id="btnFlexSpy" label="FlexSpy" click="FlexSpy.show(swfLoader.content['application'])" enabled="{theMonkey.swfLoader != null}"  textAlign="center"/>
+				<mx:Button id="btnFlexSpy" label="FlexSpy" click="handleFlexSpyClick(event)" enabled="{theMonkey.targetSwfLoader != null}"  textAlign="center"/>
 				<mx:CheckBox id="editEnabled" label="Editable" toolTip="Enable editing of the command grid"/>
 				<mx:HBox toolTip="The time in milliseconds to pause between commands" cornerRadius="4" borderStyle="solid">
 					<mx:Label text="ThinkTime" textAlign="right" paddingTop="2"/>
