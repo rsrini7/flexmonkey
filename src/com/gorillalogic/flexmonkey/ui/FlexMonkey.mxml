@@ -77,6 +77,7 @@
 		private var testSwfLoader:SWFLoader;
 	
 		private function create():void {
+			allowClose = false;
 			cmdRunner.addEventListener(MonkeyEvent.ERROR, function(event:MonkeyEvent):void {
 				Assert.fail(event.message);
 			});
@@ -86,11 +87,13 @@
 		}
 		
 		public function collapseWindow():void {
-			this.collapseHandler(new MouseEvent("synthetic"));
+			theMonkey.collapse();
+			//this.collapseHandler(new MouseEvent("synthetic"));
 		}
 		
 		public function expandWindow():void {
-			theMonkey.expandHandler(new MouseEvent("synthetic"))
+			//theMonkey.expandHandler(new MouseEvent("synthetic"))
+			theMonkey.expand();
 			PopUpManager.centerPopUp(theMonkey);
 		}
 	
