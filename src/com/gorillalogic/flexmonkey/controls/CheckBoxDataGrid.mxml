@@ -14,7 +14,7 @@
 	   <mx:itemRenderer>
 	      <mx:Component>
 	      	 <mx:Canvas width="30" height="100%">			     
-	         	<mx:CheckBox id="selectedBox" verticalCenter="0" horizontalCenter="0" mouseEnabled="false" selected="{outerDocument.isSelected(data,outerDocument.selectedItems)}"/>					      	 	      	 							      	 										      	 			         	         		         	         		      
+	         	<mx:CheckBox id="selectedBox" verticalCenter="0" horizontalCenter="0" mouseEnabled="false" selected="{outerDocument.isSelected(data,outerDocument.selectedItems)}"/>		      	 	      	 							      	 										      	 			         	         		         	         		      				      	 	      	 							      	 										      	 			         	         		         	         		      
 	    	 </mx:Canvas>
 	      </mx:Component>						
 	   </mx:itemRenderer> 
@@ -25,7 +25,8 @@
 			import mx.automation.IAutomationObject;
 			import mx.controls.listClasses.IListItemRenderer;
 			import mx.events.DataGridEvent;
-			import mx.collections.ListCollectionView;			
+			import mx.collections.ListCollectionView;
+			import mx.controls.CheckBox;			
 			
 			override public function set columns(value:Array):void
 			{
@@ -40,11 +41,14 @@
 			override protected function selectItem(item:IListItemRenderer,shiftKey:Boolean, ctrlKey:Boolean,transition:Boolean = true):Boolean
 			{
 				//Check to see if the select is from the Checkbox row, all the others will have a listData property
-				if(!(item as Object).hasOwnProperty("listData") && !shiftKey)
+				//if(!(item as Object).hasOwnProperty("listData") && !shiftKey)
+				if((item as Object).hasOwnProperty("selectedBox"))
 				{
 					ctrlKey = true;
-				}
-				return super.selectItem(item, shiftKey, ctrlKey, transition);
+				//}
+					return super.selectItem(item, shiftKey, ctrlKey, transition);
+				} 
+				return false;
 			}
 			
 			public function isSelected(data:Object, selectedItems:Array):Boolean

@@ -523,10 +523,10 @@
 				
 			</mx:ControlBar>
 			<gl:CheckBoxDataGrid editable="{editEnabled.selected}" id="cmdGrid" x="10" y="10" 
-				height="100%" width="100%" dataProvider="{commands}" allowMultipleSelection="true" sortableColumns="false" allowDragSelection="true" rowCount="20" verticalScrollPolicy="on">
+				height="100%" width="100%" dataProvider="{commands}" allowMultipleSelection="true" sortableColumns="false" allowDragSelection="true" rowCount="5" verticalScrollPolicy="on">
 				<gl:columns>
 					<!-- <mx:DataGridColumn headerText="" width="40" editable="false"/> -->
-					<mx:DataGridColumn headerText="" width="20">
+					<mx:DataGridColumn headerText="" width="20" editable="false">
 						<mx:itemRenderer>
 							<mx:Component>
 								<mx:Image source="@Embed(source='/assets/delete.png')" click="outerDocument.removeCommand(this)"/>
@@ -540,7 +540,7 @@
 					<mx:DataGridColumn headerText="Container Value" dataField="containerId" width="100"/>
 					<mx:DataGridColumn headerText="Container Property" dataField="containerProp" width="100"/>										
 				</gl:columns>
-			</gl:CheckBoxDataGrid>
+			</gl:CheckBoxDataGrid> 
 		</mx:VBox>
 		
 		<mx:VBox label="TestCase Code" width="100%" height="100%" show="showSource(event)" 
