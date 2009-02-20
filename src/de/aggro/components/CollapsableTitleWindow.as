@@ -409,7 +409,7 @@ package de.aggro.components
    	 								
    	 		width = minWidth;   	 		
    	 		
-   	 		(parent as ICTWContainer).collapseChild(this);
+   	 		//(parent as ICTWContainer).collapseChild(this);
    	 		
    	 		dispatchEvent(new CollapsableTitleWindowEvent(CollapsableTitleWindowEvent.COLLAPSE, true, true));
    	 	}
