@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexLibProperties version="1">
+<includeClasses>
+<classEntry path="com.gorillalogic.aqadaptor.AQAdapter"/>
+<classEntry path="com.gorillalogic.aqadaptor.AQEnvironment"/>
+<classEntry path="com.gorillalogic.aqadaptor.AQEventDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.AQMethodDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.AQPropertyDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.IAQCodecHelper"/>
+<classEntry path="com.gorillalogic.aqadaptor.IAQMethodDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.IAQPropertyDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.ArrayPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.AssetPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.AutomationObjectPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.ColorPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.DatePropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.DateRangePropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.DateScrollDetailPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.DefaultPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.HitDataCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.IAutomationPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.KeyCodePropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.KeyModifierPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.ListDataObjectCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.ScrollDetailPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.ScrollDirectionPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.TabObjectCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.codec.TriggerEventPropertyCodec"/>
+<classEntry path="com.gorillalogic.aqadaptor.custom.CustomAutomationClass"/>
+<classEntry path="com.gorillalogic.aqadaptor.custom.CustomAutomationEventDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.custom.CustomAutomationMethodDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.custom.CustomAutomationPropertyDescriptor"/>
+<classEntry path="com.gorillalogic.aqadaptor.custom.utilities.EnvXMLParser"/>
+<classEntry path="com.gorillalogic.flexmonkey.commands.CallCommand"/>
+<classEntry path="com.gorillalogic.flexmonkey.commands.CommandRunner"/>
+<classEntry path="com.gorillalogic.flexmonkey.commands.FlexCommand"/>
+<classEntry path="com.gorillalogic.flexmonkey.commands.PauseCommand"/>
+<classEntry path="com.gorillalogic.flexmonkey.controls.ArrayInput"/>
+<classEntry path="com.gorillalogic.flexmonkey.controls.CheckBoxDataGrid"/>
+<classEntry path="com.gorillalogic.flexmonkey.controls.IgnoreAutomationVBox"/>
+<classEntry path="com.gorillalogic.flexmonkey.core.MonkeyEvent"/>
+<classEntry path="com.gorillalogic.flexmonkey.core.MonkeyUtils"/>
+<classEntry path="com.gorillalogic.flexmonkey.ui.Bootstrap"/>
+<classEntry path="com.gorillalogic.flexmonkey.ui.FlexMonkey"/>
+<classEntry path="de.aggro.components.CollapsableTitleWindow"/>
+<classEntry path="de.aggro.components.CollapsableTitleWindowContainer"/>
+<classEntry path="de.aggro.components.CollapsableTitleWindowEvent"/>
+<classEntry path="de.aggro.components.DragPanel"/>
+<classEntry path="de.aggro.components.ICTWContainer"/>
+<classEntry path="de.aggro.components.ICTWindow"/>
+<classEntry path="de.aggro.components.PopImage"/>
+</includeClasses>
+<includeResources>
+<resourceEntry destPath="assets/delete.png" sourcePath="assets/delete.png"/>
+</includeResources>
+<namespaceManifests/>
+</flexLibProperties>

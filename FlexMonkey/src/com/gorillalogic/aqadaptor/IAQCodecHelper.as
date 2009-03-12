@@ -69,6 +69,6 @@ public interface IAQCodecHelper
                               args:Array,
                               propertyDescriptors:Array,
                               relativeParent:IAutomationObject):void;
-
+                              
 }		
 }

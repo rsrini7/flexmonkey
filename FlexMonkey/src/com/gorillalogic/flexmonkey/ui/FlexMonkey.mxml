@@ -75,7 +75,11 @@
 		private var targetSwfLoader:SWFLoader;
 		[Bindable]
 		private var testSwfLoader:SWFLoader;
-	
+		
+		public var appDomain : ApplicationDomain = ApplicationDomain.currentDomain; //Works
+		//public var appDomain : ApplicationDomain = new ApplicationDomain();
+		//public var appDomain : ApplicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain); //Works
+			
 		private function create():void {
 			var settings:SharedObject = SharedObject.getLocal("fm.windowPreferences");
 			if(settings.data.stopOnFocus != null)
@@ -347,7 +351,7 @@
 				this.targetSwfLoader = loadSwf(targetSwf, targetSwf.text, int(targetSwfWidth.text), int(targetSwfHeight.text))
 			}
 			
-			private function load(config:XML):void {
+			public function load(config:XML):void {
                 var target:String = config.@targetSwf;
                 var test:String = config.@testSwf;                
                 var visible:String = config.@visible;
@@ -395,7 +399,8 @@
 				trace("loadSwf() - " + input + ", " + name);
 				var loader:SWFLoader = new SWFLoader();
 				loader.addEventListener(FlexEvent.PREINITIALIZE, function():void {
-					loader.loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+					//loader.loaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+					loader.loaderContext = new LoaderContext(false, appDomain);
 				});
 				
 				loader.addEventListener(IOErrorEvent.IO_ERROR, function():void {
