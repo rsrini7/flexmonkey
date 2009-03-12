@@ -50,6 +50,7 @@ import mx.core.Application;
 import mx.core.mx_internal;
 import mx.events.FlexEvent;
 import mx.managers.PopUpManager;
+import mx.events.ModuleEvent;
 
 use namespace mx_internal;
 
@@ -106,6 +107,7 @@ public class AQAdapter implements IAQCodecHelper
 	    	_root = root;
 
 			root.addEventListener(FlexEvent.APPLICATION_COMPLETE, applicationCompleteHandler);
+			root.addEventListener(ModuleEvent.READY, moduleCompleteHandler);
     	}
      }
 	
@@ -117,6 +119,17 @@ public class AQAdapter implements IAQCodecHelper
 		_root.removeEventListener(FlexEvent.APPLICATION_COMPLETE, applicationCompleteHandler);
 
 		aqAdapter = new AQAdapter();
+	}
+	
+    /**
+	 *  @private    
+	 */
+	private static function moduleCompleteHandler(event:Event):void
+	{
+		//_root.removeEventListener(ModuleEvent.READY, moduleCompleteHandler);
+
+		if(!aqAdapter)
+			aqAdapter = new AQAdapter();
 	}
 	
 	//--------------------------------------------------------------------------
