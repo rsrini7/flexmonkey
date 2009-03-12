@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300" xmlns:ns1="com.gorillalogic.flexmonkey.ui.*" initialize="fm.loadConfig()"
-	>
+<mx:Module xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="600" xmlns:ns1="com.gorillalogic.flexmonkey.ui.*" >
+	<mx:Script>
+		<![CDATA[
+
+		]]>
+	</mx:Script>
 	<ns1:FlexMonkey id="fm" x="0" y="0">
 	</ns1:FlexMonkey>	
 </mx:Module>
