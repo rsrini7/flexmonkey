@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application height="100%" width="100%" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ui="com.gorillalogic.flexmonkey.ui.*"  creationComplete="create()">
+	<mx:Script>
+		<![CDATA[
+		import com.gorillalogic.flexmonkey.ui.FlexMonkey;
+		import mx.modules.ModuleLoader;
+		import mx.controls.SWFLoader;
+		import mx.events.FlexEvent;
+	
+		// private var xml : XML;
+		//public var appDomain : ApplicationDomain = ApplicationDomain.currentDomain;
+		public var appDomain : ApplicationDomain = new ApplicationDomain();
+		//public var appDomain : ApplicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
+						
+		private function create():void {
+
+			// Launcher for testing
+			//var loader : URLLoader = new URLLoader();
+		
+			//loader.addEventListener(Event.COMPLETE, loadXML);
+			//loader.load(new URLRequest("FlexMonkey.xml"));
+				
+			/* Code for loading a Module */		
+			var modLoader:ModuleLoader = new ModuleLoader();
+			modLoader.applicationDomain = appDomain;
+			modLoader.loadModule("FlexMonkeyModule.swf");			
+			//Application.application.addChild(modLoader);
+			
+			/* Code for loading a SWF */
+			var loader:SWFLoader = new SWFLoader();			
+			loader.addEventListener(FlexEvent.PREINITIALIZE, function():void {
+			loader.loaderContext = new LoaderContext(false, appDomain); });
+			loader.source = "MonkeyContacts.swf";
+			//loader.load(new URLRequest("MonkeyContacts.swf"));
+			Application.application.addChild(loader);
+			loader.content['modLoader.content'];
+								
+			// Launcher for manual
+			FlexMonkey.theMonkey.loadConfig();			
+		}
+		
+		/* private function loadXML(e : Event) : void
+		{
+			xml = new XML(e.target.data);
+			FlexMonkey.theMonkey.load(xml);	
+		} */
+		]]>
+	</mx:Script>
+<!-- <mx:ModuleLoader id="loader" width="100%" height="100%" url="FlexMonkeyModule.swf" /> -->
+</mx:Application>
+
