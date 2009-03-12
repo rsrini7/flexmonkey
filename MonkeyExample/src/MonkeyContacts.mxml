@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" height="600" width="800">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" height="900" width="1000">
 	<mx:Script>
 		<![CDATA[
 			import mx.formatters.DateBase;
@@ -18,16 +18,15 @@
 			
 			private function initMod():void {
 				var modLoader:ModuleLoader = new ModuleLoader();
-			//modLoader.applicationDomain = appDomain;
-			modLoader.loadModule("FlexMonkeyModule.swf");
-			addChild(modLoader);			
-			}
+				modLoader.applicationDomain = ApplicationDomain.currentDomain;
+				modLoader.loadModule("FlexMonkeyModule.swf");
+				addChild(modLoader);			
+			} 
 			
 			private function init():void {
 				BindingUtils.bindProperty(this, "input", grid, "selectedItem");
 				Appl.text = Application.application.className;
-
-
+				//initMod();
 			}
 			
 			private function add():void {
@@ -47,8 +46,8 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:ModuleLoader id="loader" url="FlexMonkeyModule.swf" />
-	<mx:TitleWindow x="10" y="10" width="100%" height="100%" layout="absolute">
+	<mx:ModuleLoader id="loader" x="500" y="600" width="400" height="300" url="FlexMonkeyModule.swf" /> 
+	<mx:TitleWindow x="0" y="0" width="700" height="500" layout="absolute">
 		<mx:VDividedBox x="10" y="10" width="100%" height="100%">
 			<mx:VBox>				
 			<mx:Form width="100%" height="100%">
