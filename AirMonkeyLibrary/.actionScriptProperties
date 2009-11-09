@@ -4,7 +4,6 @@
 <compilerSourcePath/>
 <libraryPath defaultLinkType="1">
 <libraryPathEntry kind="4" path=""/>
-<libraryPathEntry kind="1" linkType="1" path="libs"/>
 <libraryPathEntry kind="3" linkType="1" path="/aqadaptor/bin/aqadaptor.swc" useDefaultLinkType="false"/>
 <libraryPathEntry kind="3" linkType="1" path="/MonkeyGIF/bin/MonkeyGIF.swc" useDefaultLinkType="false"/>
 <libraryPathEntry kind="3" linkType="1" path="/MonkeyRegistrationLibrary/bin/MonkeyRegistrationLibrary.swc" useDefaultLinkType="false"/>

@@ -92,7 +92,7 @@ package com.gorillalogic.flexmonkey.monkeyCommands
 
 		override public function get xml():XML{
 			var xml:XML = 
-			<UIEvent command={command} value={value} prop={prop} />
+			<UIEvent command={command} value={value} prop={prop} channelName={channelName}/>
 			if ( !isEmpty(containerValue) ) { xml.@containerValue = containerValue };
 			if ( !isEmpty(containerProp) ) { xml.@containerProp = containerProp };			
 			for(var i:uint;i<args.length;i++){
@@ -247,6 +247,7 @@ package com.gorillalogic.flexmonkey.monkeyCommands
 			copy.result = result;	
 			copy.error = this.error;		
 			copy.errorCount = this.errorCount;
+			copy.channelName = this.channelName;
 			return copy;
 		}			
 				

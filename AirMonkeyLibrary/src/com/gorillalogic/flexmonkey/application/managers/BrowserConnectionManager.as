@@ -2,9 +2,7 @@ package com.gorillalogic.flexmonkey.application.managers
 {
 	import com.gorillalogic.flexmonkey.application.VOs.FlashVarVO;
 	import com.gorillalogic.flexmonkey.application.VOs.ProjectPropertiesVO;
-	import com.gorillalogic.flexmonkey.application.events.RecorderEvent;
-	import com.gorillalogic.flexmonkey.application.utilities.MonkeyConnection;
-	import com.gorillalogic.flexmonkey.core.MonkeyRunnable;
+	import com.gorillalogic.flexmonkey.application.utilities.MonkeyConnectionManifold;
 	import com.gorillalogic.flexmonkey.monkeyCommands.MonkeyRunnerEngine;
 	import com.gorillalogic.flexmonkey.monkeyCommands.UIEventMonkeyCommand;
 	import com.gorillalogic.flexmonkey.monkeyCommands.VerifyMonkeyCommand;
@@ -13,12 +11,15 @@ package com.gorillalogic.flexmonkey.application.managers
 	import flash.events.IEventDispatcher;
 	import flash.utils.ByteArray;
 	
+	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;	
 	
-	public class BrowserConnectionManager extends MonkeyConnection
+	public class BrowserConnectionManager //extends monkeyConnectionManifold
 	{
-		
-		public var mateDispatcher : IEventDispatcher;			
+		private var monkeyConnectionManifold:MonkeyConnectionManifold;
+
+		[Bindable] public var mateDispatcher : IEventDispatcher;					
+		[Bindable] public var connected:Boolean;
 
 		static private var _browserConnection:BrowserConnectionManager;
 		static public function get browserConnection():BrowserConnectionManager{
@@ -44,15 +45,15 @@ package com.gorillalogic.flexmonkey.application.managers
 				case ProjectPropertiesVO.MONKEYAGENT:
 					setUseBrowser(true);
 					if(targetSWFURL != "" && targetSWFURL != null){
-						pingTXTimer.start();
+						monkeyConnectionManifold.pingTXTimerStart();
 					}else{
-						setConnected(false);
-						pingTXTimer.stop();				
+						monkeyConnectionManifold.setConnected(false);
+						monkeyConnectionManifold.pingTXTimerStop();				
 					}					
 					break;
 				case ProjectPropertiesVO.MONKEYLINK:
 					setUseBrowser(true);
-					pingTXTimer.start();
+					monkeyConnectionManifold.pingTXTimerStart();
 					break;
 			}
 		}
@@ -83,103 +84,43 @@ package com.gorillalogic.flexmonkey.application.managers
 		}
 		
 		public function needInit(txCount:uint):void{
-			sendAck(txCount);
+			monkeyConnectionManifold.sendAck(txCount);
 			initAgent();
 		}
 		
-		override public function disconnect():void{
+		public function disconnect():void{
 			agentInitialized = false;
-			super.disconnect();
+			monkeyConnectionManifold.disconnect();
 		}		
 		
-		override public function sendDisconnect():void{
-			super.sendDisconnect();
+		public function sendDisconnect():void{
+			monkeyConnectionManifold.sendDisconnect();
 			agentInitialized = false;
 		}
 		
 		public function BrowserConnectionManager()
 		{
-			txChannelName = "_agent";
-			rxChannelName = "_flexMonkey";
-			writeConsole = function(message:String):void{
+			monkeyConnectionManifold = new MonkeyConnectionManifold()
+			monkeyConnectionManifold.writeConsole = function(message:String):void{
 				trace(message);
 			}
+			
+//			monkeyConnectionManifold.txChannelName = "_agent";
+//			monkeyConnectionManifold.rxChannelName = "_flexMonkey";
+			monkeyConnectionManifold.setChannelNames([
+				{consoleChannelName:"_console1", linkChannelName:"_swf1"},
+				{consoleChannelName:"_console2", linkChannelName:"_swf2"}			
+			]);
+		
+			BindingUtils.bindProperty(this, "connected", monkeyConnectionManifold, "connected");
+			BindingUtils.bindProperty(monkeyConnectionManifold,"mateDispatcher", this, "mateDispatcher");
+			BindingUtils.bindProperty(monkeyConnectionManifold,"currentRunnerEngine", this, "currentRunnerEngine");
+			BindingUtils.bindProperty(monkeyConnectionManifold,"callBackArray", this, "callBackArray");
 			agentInitialized = false;
-			super();			
-			super.startConnection();
+			monkeyConnectionManifold.startConnection();
 		}
 
-		//  receive methods ---------------------------------------------------------------------------	
 
-		public function targetSWFReady(txCount:uint):void{
-			rxAlive = true;
-			sendAck(txCount);
-			writeConsole("BrowserConnection: Target SWF ready in Browser");
-		}
-		
-		
-		private var newUIEventTXCount:uint=0;
-		
-		public function newUIEvent(ba:ByteArray, txCount:uint):void{						
-			sendAck(txCount);
-			rxAlive = true;	
-			if(newUIEventTXCount == txCount){
-				return;
-			}
-			newUIEventTXCount=txCount;
-			sendAck(txCount);
-			var uiEventMonkeyCommand:UIEventMonkeyCommand = ba.readObject();
-			writeConsole("BrowserConnection: New UI Event");
-			mateDispatcher.dispatchEvent(new RecorderEvent(RecorderEvent.NEW_UI_EVENT,uiEventMonkeyCommand));		
-		}
-
-		public function newSnapshot(ba:ByteArray, txCount:uint):void{
-			rxAlive = true;	
-			sendAck(txCount);	
-			var uiEventMonkeyCommand:UIEventMonkeyCommand = ba.readObject();
-			writeConsole("BrowserConnection: New Snapshot");			
-			mateDispatcher.dispatchEvent(new RecorderEvent(RecorderEvent.NEW_SNAPSHOT,uiEventMonkeyCommand));
-		}		
-		
-		private var targetVOByteArray:ByteArray;
-		public function newTarget(ba:ByteArray,status:String, txCount:uint):void{
-			rxAlive = true;
-			sendAck(txCount);
-			var o:Object;
-			var f:Function;
-			switch(status){
-				case "single":
-					writeConsole("BrowserConnection: got single");				
-					o = ba.readObject();
-					f = callBackArray.shift();
-					f(o);
-					break;
-				case "start":
-					writeConsole("BrowserConnection: got start");
-					targetVOByteArray = new ByteArray();
-					ba.readBytes(targetVOByteArray);					
-					break;
-				case "body":
-					writeConsole("BrowserConnection: got body");
-					ba.readBytes(targetVOByteArray,targetVOByteArray.length);				
-					break;
-				case "end":
-					writeConsole("BrowserConnection: got end");
-					ba.readBytes(targetVOByteArray,targetVOByteArray.length);
-					o = targetVOByteArray.readObject();
-					f = callBackArray.shift();
-					f(o); 			
-					break;
-			}
-		}
-		 
-		public function agentRunDone(ba:ByteArray, txCount:uint):void{
-			rxAlive = true;
-			sendAck(txCount);			
-			writeConsole("BrowserConnection: Agent Done");			
-			var monkeyRunnable:MonkeyRunnable = ba.readObject();
-			currentRunnerEngine.agentRunDone(monkeyRunnable);
-		}		
 			
 		// send methods ---------------------------------------------------------------------------	
 
@@ -192,7 +133,7 @@ package com.gorillalogic.flexmonkey.application.managers
 		public function set targetSWFURL(url:String):void{
 			_targetSWFURL = url;
 			if(useBrowser && targetSWFURL != "" && targetSWFURL != null){
-				pingTXTimer.start();				
+				monkeyConnectionManifold.pingTXTimerStart();				
 			}
 		}
 
@@ -203,7 +144,7 @@ package com.gorillalogic.flexmonkey.application.managers
 		public function set targetSWFWidth(w:uint):void{
 			_targetSWFWidth = w;
 			if(agentInitialized){
-				send(new TXVO("_agent", "setTargetSWFWidth", [w]));	
+				monkeyConnectionManifold.send(new TXVO("_agent", "setTargetSWFWidth", [w]));	
 			}
 		}
 
@@ -214,7 +155,7 @@ package com.gorillalogic.flexmonkey.application.managers
 		public function set targetSWFHeight(h:uint):void{
 			_targetSWFHeight = h;
 			if(agentInitialized){
-				send(new TXVO("_agent", "setTargetSWFHeight", [h]));
+				monkeyConnectionManifold.send(new TXVO("_agent", "setTargetSWFHeight", [h]));
 			}
 		}
 
@@ -229,38 +170,46 @@ package com.gorillalogic.flexmonkey.application.managers
 		private var agentInitialized:Boolean = false;
 		private function initAgent():void{
 			for each(var flashVar:FlashVarVO in flashVars){
-				send(new TXVO("_agent", "setFlashVar", [flashVar.name, flashVar.value]));	
+				monkeyConnectionManifold.send(new TXVO("_agent", "setFlashVar", [flashVar.name, flashVar.value]));	
 			}				
-			send(new TXVO("_agent", "setTargetSWFWidth", [targetSWFWidth]));
-			send(new TXVO("_agent", "setTargetSWFHeight", [targetSWFHeight]));
-			send(new TXVO("_agent", "setTargetSWFURL", [targetSWFURL]));
+			monkeyConnectionManifold.send(new TXVO("_agent", "setTargetSWFWidth", [targetSWFWidth]));
+			monkeyConnectionManifold.send(new TXVO("_agent", "setTargetSWFHeight", [targetSWFHeight]));
+			monkeyConnectionManifold.send(new TXVO("_agent", "setTargetSWFURL", [targetSWFURL]));
 			agentInitialized = true;				
 		}
 	
 		public function startRecording():void{
-			send(new TXVO("_agent", "startRecording"));
+			monkeyConnectionManifold.send(new TXVO("_agent", "startRecording"));
 			recordingActive = true;		
 		}
 		public function stopRecording():void{
-			send(new TXVO("_agent", "stopRecording"));
+			monkeyConnectionManifold.send(new TXVO("_agent", "stopRecording"));
 			recordingActive = false;		
 		}	
 		public function takeSnapshot():void{
-			send(new TXVO("_agent", "takeSnapshot"));
+			monkeyConnectionManifold.send(new TXVO("_agent", "takeSnapshot"));
+		}
+		public function clearSnapshot():void{
+			monkeyConnectionManifold.send(new TXVO("_agent", "clearSnapshot"));
 		}
 		
-		private var currentRunnerEngine:MonkeyRunnerEngine;
+		
+// ========================		
+		
+	
+		
+		[Bindable] public var currentRunnerEngine:MonkeyRunnerEngine;
 		public function runCommand(c:UIEventMonkeyCommand,e:MonkeyRunnerEngine):void{
 			currentRunnerEngine = e;
 			var clone:UIEventMonkeyCommand = c.clone();
 			clone.parent = null;
 			var ba:ByteArray = new ByteArray();
 			ba.writeObject(clone);
-			writeConsole("BrowserConnection: runCommand length: " + ba.length);			
-			send(new TXVO("_agent", "runCommand", [ba]));
+			monkeyConnectionManifold.writeConsole("BrowserConnection: runCommand length: " + ba.length);			
+			monkeyConnectionManifold.send(new TXVO(clone.channelName, "runCommand", [ba]));
 		}
 				
-		private var callBackArray:Array = [];
+		[Bindable] public var callBackArray:Array = [];
 		public function getTarget(verifyMonkeyCommand:VerifyMonkeyCommand,callBack:Function):void{
 			callBackArray.push(callBack);
 			var ba:ByteArray = new ByteArray();
@@ -272,26 +221,31 @@ package com.gorillalogic.flexmonkey.application.managers
 			var bufferSize:uint = 40000;
 			
 			if(ba.bytesAvailable < bufferSize){
-				send(new TXVO("_agent", "getTarget", [ba, "single"]));
-				writeConsole("BrowserConnection: sent single");				
+				monkeyConnectionManifold.send(new TXVO(clone.channelName, "getTarget", [ba, "single"]));
+				monkeyConnectionManifold.writeConsole("BrowserConnection: sent single");				
 			}else{				
 				var buffer:ByteArray = new ByteArray();
 				ba.readBytes(buffer,0,bufferSize);
-				send(new TXVO("_agent", "getTarget", [buffer, "start"]));
-				writeConsole("BrowserConnection: sent start");								
+				monkeyConnectionManifold.send(new TXVO(clone.channelName, "getTarget", [buffer, "start"]));
+				monkeyConnectionManifold.writeConsole("BrowserConnection: sent start");								
 				while(ba.bytesAvailable >= bufferSize){
 					buffer = new ByteArray();
 					ba.readBytes(buffer,0,bufferSize);
-					send(new TXVO("_agent", "getTarget", [buffer, "body"]));
-					writeConsole("BrowserConnection: sent body");													
+					monkeyConnectionManifold.send(new TXVO(clone.channelName, "getTarget", [buffer, "body"]));
+					monkeyConnectionManifold.writeConsole("BrowserConnection: sent body");													
 				}
 				if(ba.bytesAvailable > 0){
 					buffer = new ByteArray();
 					ba.readBytes(buffer);
-					send(new TXVO("_agent", "getTarget", [buffer, "end"]));
-					writeConsole("BrowserConnection: sent end");																		
+					monkeyConnectionManifold.send(new TXVO(clone.channelName, "getTarget", [buffer, "end"]));
+					monkeyConnectionManifold.writeConsole("BrowserConnection: sent end");																		
 				}
 			}			
-		}				
+		}	
+		
+		
+// ========================		
+		
+					
 	}
 }

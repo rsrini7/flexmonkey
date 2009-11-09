@@ -74,7 +74,7 @@ package com.gorillalogic.flexmonkey.monkeyCommands
 		override public function get xml():XML{
 			var xml:XML = 
 			<Verify description={description} 
-				snapshotURL={snapshotURL} value={value} prop={prop}
+				snapshotURL={snapshotURL} value={value} prop={prop} channelName={channelName}
 				verifyBitmap={verifyBitmap} />
 			if ( !isEmpty(containerValue) ) { xml.@containerValue = containerValue };
 			if ( !isEmpty(containerProp) ) { xml.@containerProp = containerProp };
@@ -297,7 +297,8 @@ package com.gorillalogic.flexmonkey.monkeyCommands
 			value = uiCommand.value;
 			prop = uiCommand.prop;
 			containerValue = uiCommand.containerValue;
-			containerProp = uiCommand.containerProp;			
+			containerProp = uiCommand.containerProp;
+			channelName = uiCommand.channelName;			
 			getTarget(this.finishProcessExpectedSnapshot);
 		}		
 		
@@ -508,6 +509,7 @@ package com.gorillalogic.flexmonkey.monkeyCommands
 			copy.failedAssertionCount = failedAssertionCount;
 			copy.errorCount = errorCount;
 			copy.error = error;
+			copy.channelName = this.channelName;
 			return copy;
 		}			
 	}

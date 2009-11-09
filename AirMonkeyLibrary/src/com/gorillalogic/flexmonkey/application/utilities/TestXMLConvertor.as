@@ -94,6 +94,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 						var uiEventCmd:String=x.@command;
 						var uiEventValue:String=x.@value;
 						var uiEventProp:String=x.@prop;
+						var uiEventChannelName:String=x.@channelName;
 						var uiEventContainerValue:String=x.@containerValue;
 						var uiEventContainerProp:String=x.@containerProp;								
 						var uiEventArgs:Array = new Array();
@@ -108,6 +109,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 						uiEventCommand.command = uiEventCmd;
 						uiEventCommand.value = uiEventValue;
 						uiEventCommand.prop = uiEventProp;
+						uiEventCommand.channelName = uiEventChannelName;
 						uiEventCommand.containerValue = uiEventContainerValue;
 						uiEventCommand.containerProp = uiEventContainerProp;								
 						uiEventCommand.args = uiEventArgs;								
@@ -126,6 +128,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 						var verifySnapshotURL:String = x.@snapshotURL;	
 						var verifyValue:String = x.@value;
 						var verifyProp:String = x.@prop;
+						var verifyChannelName:String = x.@channelName;
 						var verifyContainerValue:String = x.@containerValue;
 						var verifyContainerProp:String = x.@containerProp;
 						var verifyBitmap:Boolean = (x.@verifyBitmap == "true");
@@ -134,6 +137,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 						verifyCommand.description = verifyDescription;
 						verifyCommand.value = verifyValue;
 						verifyCommand.prop = verifyProp;
+						verifyCommand.channelName = verifyChannelName;
 						verifyCommand.containerValue = verifyContainerValue;
 						verifyCommand.containerProp = verifyContainerProp;	
 						verifyCommand.verifyBitmap = verifyBitmap;	

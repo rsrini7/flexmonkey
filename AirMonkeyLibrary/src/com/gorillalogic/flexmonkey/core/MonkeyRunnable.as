@@ -18,6 +18,15 @@ package com.gorillalogic.flexmonkey.core
 			super(target);
 		}
 
+
+		private var _channelName:String;
+		public function get channelName():String{
+			return _channelName;
+		}
+		public function set channelName(c:String):void{
+			_channelName = c;
+		}
+
 		private var _parent:Object;
 		public function get parent():Object{
 			return _parent;

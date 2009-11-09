@@ -6,11 +6,12 @@ package com.gorillalogic.monkeyAgent.VOs
 {
 	public class TXVO
 	{
-		public function TXVO(channel:String, method:String, arguments:Array=null)
+		public function TXVO(channel:String, method:String, arguments:Array=null, targetChannel:String=null)
 		{
 			this.channel = channel;
 			this.method = method;
 			this.arguments = arguments;
+			this.targetChannel = targetChannel;			
 			txCount = 0;
 		}
 
@@ -18,6 +19,7 @@ package com.gorillalogic.monkeyAgent.VOs
 		public var method:String;
 		public var arguments:Array;
 		public var txCount:uint;
+		public var targetChannel:String;
 
 	}
 }

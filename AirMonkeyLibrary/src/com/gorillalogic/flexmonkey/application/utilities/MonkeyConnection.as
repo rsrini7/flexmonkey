@@ -2,7 +2,6 @@ package com.gorillalogic.flexmonkey.application.utilities
 {
 	import com.gorillalogic.monkeyAgent.VOs.TXVO;
 	
-	import flash.display.DisplayObject;
 	import flash.events.AsyncErrorEvent;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -13,6 +12,8 @@ package com.gorillalogic.flexmonkey.application.utilities
 	import flash.net.LocalConnection;
 	import flash.utils.Timer;
 	
+	import mx.core.Application;
+	
 	public class MonkeyConnection extends EventDispatcher
 	{
 		public function MonkeyConnection(target:IEventDispatcher=null)
@@ -20,7 +21,23 @@ package com.gorillalogic.flexmonkey.application.utilities
 			super(target);
 		}
 		
-		protected function startConnection():void{
+		public function startConnection():void{
+			var application:Application = Application.application as Application;
+			var parameters:Object = application.parameters;
+			if(txChannelName == null || txChannelName == ""){
+				if(parameters && parameters.hasOwnProperty("txChannelName") && parameters.txChannelName != null){
+					txChannelName = parameters.txChannelName;
+				}else{
+					txChannelName = "_flexMonkey";
+				}
+			}
+			if(rxChannelName == null || rxChannelName == ""){			
+				if(parameters && parameters.hasOwnProperty("rxChannelName") && parameters.rxChannelName != null){
+					rxChannelName = parameters.rxChannelName;
+				}else{
+					rxChannelName =  "_agent";
+				}	
+			}				
 			// set up RX Channel listen 
 			initializeRXChannel();
 			// set up TX channel and announce
@@ -33,16 +50,16 @@ package com.gorillalogic.flexmonkey.application.utilities
 			pingTXTimer.addEventListener(TimerEvent.TIMER, pingTXHandler, false, 0, true);			
 		}
 
-		protected var txChannelName:String;
-		protected var rxChannelName:String;
-		protected var writeConsole:Function;		
+		public var txChannelName:String;
+		public var rxChannelName:String;
+		public var writeConsole:Function;		
 
-		protected var pingTXTimer:Timer;
-		protected var txConnection:LocalConnection;
+		public var pingTXTimer:Timer;
+		public var txConnection:LocalConnection;
 		private var txCount:uint = 1;
 
-		protected var pingRXTimer:Timer;
-		protected var rxConnection:LocalConnection;
+		public var pingRXTimer:Timer;
+		public var rxConnection:LocalConnection;
 		private var rxCount:uint = 1;
 		
 		private var _connected:Boolean = false;
@@ -54,11 +71,11 @@ package com.gorillalogic.flexmonkey.application.utilities
 			_connected = c;
 			this.dispatchEvent(new Event("connectedChanged"));
 			if(_connected){
-				writeConsole("Connected and timing");
+				writeConsole(rxChannelName + ": Connected and timing");
 				pingRXTimer.start();
 				rxAlive = true;					
 			}else{
-				writeConsole("Disconnected");				
+				writeConsole(rxChannelName + ": Disconnected");				
 				pingRXTimer.stop();
 				rxAlive = false;	
 				try{
@@ -92,10 +109,10 @@ package com.gorillalogic.flexmonkey.application.utilities
 		}
 		
 		private var _rxAlive:Boolean = false;
-		protected function get rxAlive():Boolean{
+		public function get rxAlive():Boolean{
 			return _rxAlive;
 		}
-		protected function set rxAlive(a:Boolean):void{
+		public function set rxAlive(a:Boolean):void{
 			_rxAlive = a;
 			if(_rxAlive){
 				if(!connected){
@@ -116,13 +133,13 @@ package com.gorillalogic.flexmonkey.application.utilities
 			initializeRXChannel1();
 		}
 		
-		protected function initializeRXChannel0():void{
+		public function initializeRXChannel0():void{
 			// Channels are named for their listener			
 			rxConnection = new LocalConnection();
 			rxConnection.allowDomain('*')
 			rxConnection.client = this;			
 		}
-		protected function initializeRXChannel1():void{
+		public function initializeRXChannel1():void{
 			try{
 				rxConnection.connect(rxChannelName);
 			}catch(error:ArgumentError){
@@ -137,7 +154,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 			txConnection.addEventListener(IOErrorEvent.IO_ERROR,IOErrorHandler);								
 		}
 		
-		protected function pingRXHandler(event:TimerEvent):void{
+		public function pingRXHandler(event:TimerEvent):void{
 			if(rxAlive){
 				rxAlive = false;
 			}else{
@@ -146,7 +163,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 			}
 		}
 
-		protected function pingTXHandler(event:TimerEvent):void{
+		public function pingTXHandler(event:TimerEvent):void{
      		send(new TXVO(txChannelName, "ping"));
 		}
 
@@ -175,7 +192,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 		private var pingCount:uint = 0;
 		private var resendPingCount:uint = 2;
 		
-		protected function send(txVO:TXVO):void{
+		public function send(txVO:TXVO):void{
 			if( txVO.method == "ping" ||
 			    txVO.method == "ack"  ||
 			    txVO.method == "disconnect"){
@@ -238,7 +255,7 @@ package com.gorillalogic.flexmonkey.application.utilities
 			send(new TXVO(txChannelName, "disconnect"));	
 			txQueue = [];						
 		}						
-		protected function sendAck(count:uint):void{
+		public function sendAck(count:uint):void{
 			send(new TXVO(txChannelName, "ack", [count]));
 		}
 		
