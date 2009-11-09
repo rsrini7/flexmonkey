@@ -24,6 +24,10 @@ package com.gorillalogic.monkeylink
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	import mx.managers.SystemManager;
+//
+// the link sends to "_flexMonkey" 
+// the console sends to "_agent" 
+//
 	
 	[Mixin]
 	public class MonkeyLink extends MonkeyConnection
@@ -42,8 +46,22 @@ package com.gorillalogic.monkeylink
 		public function MonkeyLink()
 		{
 			super();
-			txChannelName = "_flexMonkey";
-			rxChannelName = "_agent";
+/*
+			var application:Application = Application.application as Application;
+			var parameters:Object = application.parameters;
+			
+			if(parameters.txChannelName != null){
+				txChannelName = parameters.txChannelName;
+			}else{
+				txChannelName = "_flexMonkey";
+			}
+			
+			if(parameters.rxChannelName != null){
+				rxChannelName = parameters.rxChannelName;
+			}else{
+				rxChannelName =  "_agent";
+			}			
+*/			
 			writeConsole = function(message:String):void{trace(message)};
 		}
 		
@@ -59,7 +77,7 @@ package com.gorillalogic.monkeylink
 			reloadAgent();
 		}
 
-		override public function initializeRXChannel():void{
+		override public function initializeRXChannel():void{		
 			initializeRXChannel0();
 // This next line will need to change with each new release version...			
 			rxConnection.allowInsecureDomain("app#com.gorillalogic.FlexMonkey.FAF8CB444E71DE51EAFD06DD0331CF35731C3B7D.1"); 			
@@ -67,7 +85,7 @@ package com.gorillalogic.monkeylink
 		}
 // ============================================================================================		
 		private function sendNeedInit():void{
-			send(new TXVO("_flexMonkey", "needInit"));
+			send(new TXVO(txChannelName, "needInit"));
 		}
 		private var needInit:Boolean;
 
@@ -148,6 +166,11 @@ package com.gorillalogic.monkeylink
 			MonkeyAutomationState.monkeyAutomationState.state = MonkeyAutomationState.SNAPSHOT;						
 			AQAdapter.aqAdapter.beginRecording();			
 		}
+		
+		public function clearSnapshot(txCount:uint):void{
+			sendAck(txCount);
+			endSnapshot();
+		}
 			
 		private var verifyMonkeyCommandByteArray:ByteArray;
 		private var getTargetTXCount:uint=0;
@@ -215,7 +238,7 @@ trace("Now its caught!");
 			// send the completed command back to the monkey here:
      		var returnCommandByteArray:ByteArray = new ByteArray();
      		returnCommandByteArray.writeObject(command);
-     		send(new TXVO("_flexMonkey", "agentRunDone", [returnCommandByteArray]));
+     		send(new TXVO(txChannelName, "agentRunDone", [returnCommandByteArray]));
      		writeConsole("runCommand sent agentRunDone on " 
      			+ ((command is UIEventMonkeyCommand)?UIEventMonkeyCommand(command).command:"non-UIEventMonkeyCommand")
      			+ " "
@@ -247,21 +270,26 @@ trace("Now its caught!");
 			uiEventCommand.prop = idProp;
 			uiEventCommand.command = event.name;
 			uiEventCommand.args = event.args;
+			uiEventCommand.channelName = this.rxChannelName;
 			byteArray.writeObject(uiEventCommand);
 			switch(MonkeyAutomationState.monkeyAutomationState.state){
 				case MonkeyAutomationState.NORMAL:
 writeConsole("Sending RecordEvent when AutomationState NORMAL");				
-					send(new TXVO("_flexMonkey", "newUIEvent", [byteArray]));
+					send(new TXVO(txChannelName, "newUIEvent", [byteArray]));
 					break;
 				case MonkeyAutomationState.SNAPSHOT:
-					send(new TXVO("_flexMonkey", "newSnapshot", [byteArray]));					
-		  			var snapEnd:Object = AQAdapter.aqAdapter.endRecording();	
-		  			MonkeyAutomationState.monkeyAutomationState.state = MonkeyAutomationState.IDLE;				
+					send(new TXVO(txChannelName, "newSnapshot", [byteArray]));					
+					endSnapshot();
 	 				break;
 				default:
 					break;
 			}
         }  			
+ 	
+ 		private function endSnapshot():void{
+  			var snapEnd:Object = AQAdapter.aqAdapter.endRecording();	
+  			MonkeyAutomationState.monkeyAutomationState.state = MonkeyAutomationState.IDLE;	 			
+ 		}
  	
 		private var attributeFinder:AttributeFinder = new AttributeFinder();        		
         private function returnTarget(verifyMonkeyCommandByteArray:ByteArray):void{
@@ -297,23 +325,23 @@ writeConsole("Sending RecordEvent when AutomationState NORMAL");
 			var bufferSize:uint = 40000;
 			
 			if(ba.bytesAvailable < bufferSize){
-				send(new TXVO("_flexMonkey", "newTarget", [ba, "single"]));
+				send(new TXVO(txChannelName, "newTarget", [ba, "single"]));
 				writeConsole("Sent Single: " + ba.length + " bytes of TargetVO");
 			}else{				
 				var buffer:ByteArray = new ByteArray();
 				ba.readBytes(buffer,0,bufferSize);
-				send(new TXVO("_flexMonkey", "newTarget", [buffer, "start"]));
+				send(new TXVO(txChannelName, "newTarget", [buffer, "start"]));
 				writeConsole("Sent Start: " + buffer.length + " bytes of TargetVO");				
 				while(ba.bytesAvailable >= bufferSize){
 					buffer = new ByteArray();
 					ba.readBytes(buffer,0,bufferSize);
-					send(new TXVO("_flexMonkey", "newTarget", [buffer, "body"]));
+					send(new TXVO(txChannelName, "newTarget", [buffer, "body"]));
 					writeConsole("Sent Body: " + buffer.length + " bytes of TargetVO");
 				}
 				if(ba.bytesAvailable > 0){
 					buffer = new ByteArray();
 					ba.readBytes(buffer);
-					send(new TXVO("_flexMonkey", "newTarget", [buffer, "end"])); 					
+					send(new TXVO(txChannelName, "newTarget", [buffer, "end"])); 					
 					writeConsole("Sent End: " + buffer.length + " bytes of TargetVO");					
 				}
 			}	
