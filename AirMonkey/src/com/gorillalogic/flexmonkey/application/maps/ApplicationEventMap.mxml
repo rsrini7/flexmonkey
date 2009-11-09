@@ -275,6 +275,7 @@ FlexMonkey 1.0 is distributed under the GNU General Public License, v2.
 	</EventHandlers>
 
 	<EventHandlers type="{RecorderEvent.NEW_SNAPSHOT}" debug="true">
+		<MethodInvoker generator="{BrowserConnectionManager}" method="clearSnapshot"/>
 		<MethodInvoker generator="{MonkeyTestRecorder}" method="snapshotTaken"/>
 		<MethodInvoker generator="{WindowManager}" method="closeAlertWindow"/>
 		<MethodInvoker generator="{ProjectManager}" method="updateSnapshot" arguments="{event.command}"/>
