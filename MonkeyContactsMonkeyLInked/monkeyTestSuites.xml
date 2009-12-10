@@ -1,0 +1,122 @@
+<TopNode>
+  <TestSuite name="NewTestSuite" description="">
+    <TestCase name="NewTestCase" description="">
+      <Test name="NewTest" description="null" defaultThinkTime="500">
+        <UIEvent command="SelectText" value="inName" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inName" prop="automationName">
+          <arg value="BOB"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inType" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Select" value="inType" prop="automationName">
+          <arg value="Work"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inPhone" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inPhone" prop="automationName">
+          <arg value="212-555-1212"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Change" value="inDate" prop="automationName">
+          <arg value="Tue Dec 15 2009"/>
+        </UIEvent>
+        <UIEvent command="Click" value="Add" prop="automationName">
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inName" prop="automationName">
+          <arg value="3"/>
+          <arg value="3"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inName" prop="automationName">
+          <arg value="0"/>
+          <arg value="3"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inName" prop="automationName">
+          <arg value="Ted"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inType" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Select" value="inType" prop="automationName">
+          <arg value="Mobile"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inPhone" prop="automationName">
+          <arg value="0"/>
+          <arg value="12"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inPhone" prop="automationName">
+          <arg value="312-555-3434"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Scroll" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Scroll" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Scroll" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Change" value="inDate" prop="automationName">
+          <arg value="Fri Mar 12 2010"/>
+        </UIEvent>
+        <UIEvent command="Click" value="Add" prop="automationName">
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Select" value="grid" prop="automationName">
+          <arg value="  | *BOB* | Work | 212-555-1212 | Tue Dec 15 00:00:00 GMT-0700 2009"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="automationName{MonkeyContacts string}id{MonkeyContacts string}automationIndex{index:-1 string}label{ string}automationClassName{FlexApplication string}className{MonkeyContacts string}|id{null object}automationIndex{index:0 string}label{ string}automationName{index:0 string}automationClassName{FlexTitleWindow string}className{mx.containers.TitleWindow string}|id{null object}automationIndex{index:0 string}label{ string}automationName{index:0 string}automationClassName{FlexDividedBox string}className{mx.containers.VDividedBox string}|automationName{grid string}id{grid string}automationIndex{index:6 string}automationClassName{FlexDataGrid string}className{mx.controls.DataGrid string}|editable{true boolean}id{null object}automationClassName{FlexTextArea string}automationName{%20%20%7C%20BOB%20%7C%20Work%20%7C%20212-555-1212%20%7C%20Tue%20Dec%2015%2000:00:00%20GMT-0700%202009 string}automationIndex{name:1 string}displayAsPassword{false boolean}className{mx.controls.TextInput string}" prop="automationID">
+          <arg value="3"/>
+          <arg value="3"/>
+        </UIEvent>
+        <Verify description="New Verify" snapshotURL="07EBAB3A-4020-5B5E-0DB0-5B67DC1A96AE.snp" value="automationName{MonkeyContacts string}id{MonkeyContacts string}automationIndex{index:-1 string}label{ string}automationClassName{FlexApplication string}className{MonkeyContacts string}|id{null object}automationIndex{index:0 string}label{ string}automationName{index:0 string}automationClassName{FlexTitleWindow string}className{mx.containers.TitleWindow string}|id{null object}automationIndex{index:0 string}label{ string}automationName{index:0 string}automationClassName{FlexDividedBox string}className{mx.containers.VDividedBox string}|automationName{grid string}id{grid string}automationIndex{index:6 string}automationClassName{FlexDataGrid string}className{mx.controls.DataGrid string}|editable{true boolean}id{null object}automationClassName{FlexTextArea string}automationName{%20%20%7C%20BOB%20%7C%20Work%20%7C%20212-555-1212%20%7C%20Tue%20Dec%2015%2000:00:00%20GMT-0700%202009 string}automationIndex{name:1 string}displayAsPassword{false boolean}className{mx.controls.TextInput string}" prop="automationID" verifyBitmap="false">
+          <Attribute name="text" expectedValue="BOB" actualValue="null" type="property"/>
+        </Verify>
+      </Test>
+      <Test name="NewTest" description="null" defaultThinkTime="500">
+        <UIEvent command="SelectText" value="inName" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inName" prop="automationName">
+          <arg value="Helen"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inType" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Select" value="inType" prop="automationName">
+          <arg value="Work"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inPhone" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inPhone" prop="automationName">
+          <arg value="111111"/>
+        </UIEvent>
+        <UIEvent command="Click" value="Add" prop="automationName">
+          <arg value="0"/>
+        </UIEvent>
+      </Test>
+    </TestCase>
+  </TestSuite>
+</TopNode>
