@@ -1,0 +1,50 @@
+<TopNode>
+  <TestSuite name="NewTestSuite" description="">
+    <TestCase name="NewTestCase" description="">
+      <Test name="NewTest" description="null" defaultThinkTime="500">
+        <UIEvent command="SelectText" value="inName" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inName" prop="automationName">
+          <arg value="Joel Hooks"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inType" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Select" value="inType" prop="automationName">
+          <arg value="Work"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="SelectText" value="inPhone" prop="automationName">
+          <arg value="0"/>
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Input" value="inPhone" prop="automationName">
+          <arg value="212-555-4545"/>
+        </UIEvent>
+        <UIEvent command="Open" value="inDate" prop="automationName">
+          <arg value="1"/>
+        </UIEvent>
+        <UIEvent command="Change" value="inDate" prop="automationName">
+          <arg value="Mon Jan 18 2010"/>
+        </UIEvent>
+        <UIEvent command="Click" value="Add" prop="automationName">
+          <arg value="0"/>
+        </UIEvent>
+        <UIEvent command="Select" value="grid" prop="automationName">
+          <arg value="  | *Joel Hooks* | Work | 212-555-4545 | Mon Jan 18 00:00:00 GMT-0700 2010"/>
+          <arg value="1"/>
+          <arg value="0"/>
+        </UIEvent>
+        <Verify description="New Verify" snapshotURL="353C1E0A-F0AE-46E5-342E-570200122DDC.snp" value="scoozy" prop="automationName" verifyBitmap="false">
+          <Attribute name="text" expectedValue="Joel Hooks" actualValue="Joel Hooks" type="property"/>
+        </Verify>
+        <UIEvent command="Click" value="Delete" prop="automationName">
+          <arg value="0"/>
+        </UIEvent>
+      </Test>
+    </TestCase>
+  </TestSuite>
+</TopNode>

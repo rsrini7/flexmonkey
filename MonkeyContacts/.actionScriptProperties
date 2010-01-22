@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actionScriptProperties mainApplicationPath="MonkeyContacts.mxml" projectUUID="4d5b2245-a172-4b28-a4d7-4bcc5f1f764a" version="6">
+  <compiler additionalCompilerArguments="-locale en_US -includes com.gorillalogic.monkeylink.MonkeyLink  -include-libraries &quot;../libs/FlexAutomationLibrary4_0_0.swc&quot; -include-libraries &quot;${flexlib}/libs/automation.swc&quot;       -include-libraries &quot;${flexlib}/libs/automation_agent.swc&quot;  -include-libraries &quot;${flexlib}/libs/automation_dmv.swc&quot;  -include-libraries &quot;${flexlib}/libs/automation_spark.swc&quot;" autoRSLOrdering="true" copyDependentFiles="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+    <compilerSourcePath/>
+    <libraryPath defaultLinkType="0">
+      <libraryPathEntry kind="4" path="">
+        <excludedEntries>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
+        </excludedEntries>
+      </libraryPathEntry>
+      <libraryPathEntry kind="1" linkType="1" path="libs"/>
+    </libraryPath>
+    <sourceAttachmentPath/>
+  </compiler>
+  <applications>
+    <application path="MonkeyContacts.mxml"/>
+  </applications>
+  <modules/>
+  <buildCSSFiles/>
+</actionScriptProperties>
